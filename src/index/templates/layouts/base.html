@@ -96,6 +96,9 @@
                     <li><a rel="prefetch" href="/commissions/{{ com.slug }}/manage/edit" class="clickable{% if active_commission_edit %} active{% endif %}">
                         Éditer
                     </a></li>
+                    <li><a rel="prefetch" href="/commissions/{{ com.slug }}/manage/social" class="clickable{% if active_commission_social %} active{% endif %}">
+                        Social
+                    </a></li>
                     {% if can_change_member %}
                     <li><a rel="prefetch" href="/commissions/{{ com.slug }}/manage/members" class="clickable{% if active_commission_members %} active{% endif %}">
                         Membres

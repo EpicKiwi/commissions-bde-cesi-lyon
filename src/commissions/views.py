@@ -341,5 +341,6 @@ def manage_commission_social(request, slug):
     return render(request, "manage_social.html", {
         'com': com,
         "active_commission_id": com.id,
+        "active_commission_social": True,
         "can_change_member": com.has_change_members_permission(request)
     })
