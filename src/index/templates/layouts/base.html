@@ -1,9 +1,11 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="fr-fr">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <link rel="icon" type="image/png" href="{% static "img/logo.png" %}" />
     <title>{% block notitle %}{% block title %}{% endblock %} - {% endblock %}BDE Cesi Lyon</title>
 
     <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Slab:700&display=swap" rel="stylesheet"/>
@@ -23,11 +25,12 @@
     <script src="{% static "components/autoresize.js" %}"></script>
     <script src="{% static "components/class-switcher.js" %}"></script>
     <script src="{% static "components/mobile-header.js" %}"></script>
+    <script src="{% static "components/compact-commission.js" %}"></script>
     {% block head %}{% endblock %}
 
     {% block opengraph %}
         <meta property="og:title" content="BDE Cesi Lyon" />
-        <meta property="og:image" content="http://{{ request.get_host }}{% static "img/logo.jpg" %}" />
+        <meta property="og:image" content="http://{{ request.get_host }}{% static "img/logo.png" %}" />
         <meta property="og:description" content="Viens participer à la vie associative du CESI de Lyon !"/>
     {% endblock %}
         <meta property="og:site_name" content="BDE Cesi Lyon"/>
@@ -42,7 +45,7 @@
     <bde-class-switcher class="mobile-close" target=".main-aside" target-class="activated"></bde-class-switcher>
     <header class="main-header">
         <a href="/">
-            <img src="{% static "img/logo.jpg" %}" alt="BDE Cesi Lyon"/>
+            <img src="{% static "img/logo.png" %}" alt="BDE Cesi Lyon"/>
         </a>
     </header>
 
@@ -86,9 +89,20 @@
     <ul class="nav">
         {% for com in userCommissions %}
             <li><a href="/commissions/{{ com.slug }}/manage" class="clickable small-commission{% if active_commission_id and com.id == active_commission_id %} active{% endif %}">
-                <div class="small-commission-logo"><img src="/media/{{ com.logo }}"/></div>
-                <div class="small-commission-info">{{com.name}}</div>
+                {% include "fragments/compact-commission.html" %}
             </a></li>
+            {% if active_commission_id and com.id == active_commission_id %}
+                <ul class="subsection">
+                    <li><a rel="prefetch" href="/commissions/{{ com.slug }}/manage/edit" class="clickable{% if active_commission_edit %} active{% endif %}">
+                        Éditer
+                    </a></li>
+                    {% if can_change_member %}
+                    <li><a rel="prefetch" href="/commissions/{{ com.slug }}/manage/members" class="clickable{% if active_commission_members %} active{% endif %}">
+                        Membres
+                    </a></li>
+                    {% endif %}
+                </ul>
+            {% endif %}
         {% endfor %}
     </ul>
     <div class="filler"></div>
@@ -115,13 +129,27 @@
         </ul>
         <ul>
             {% if status_doc %}
-                <li><a href="/media/{{ status_doc.file }}">Status</a></li>
+                <li><a href="/media/{{ status_doc.file }}">Status BDE</a></li>
             {% endif %}
             {% if rules_doc %}
-                <li><a href="/media/{{ rules_doc.file }}">Reglement intérieur</a></li>
+                <li><a href="/media/{{ rules_doc.file }}">Reglement intérieur BDE</a></li>
+            {% endif %}
+        </ul>
+    <div class="separator"></div>
+        <ul>
+            <li>BDS CESI Lyon</li>
+            <li><a href="https://instagram.com/bdscesi?igshid=nbrn774n9czv">Instagram</a></li>
+        </ul>
+        <ul>
+            {% if status_bds_doc %}
+                <li><a href="/media/{{ status_bds_doc.file }}">Status BDS</a></li>
+            {% endif %}
+            {% if rules_bds_doc %}
+                <li><a href="/media/{{ rules_bds_doc.file }}">Reglement intérieur BDS</a></li>
             {% endif %}
         </ul>
         {% if user.is_staff %}
+        <div class="separator"></div>
         <ul>
             <li><a href="/admin">Administration avancée</a></li>
         </ul>

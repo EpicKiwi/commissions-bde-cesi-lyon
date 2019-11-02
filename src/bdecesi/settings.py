@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'users',
     'documents',
     'documentation',
+    'webhooks',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -133,7 +134,7 @@ LOGIN_URL = "/auth"
 
 LANGUAGE_CODE = 'fr-fr'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "Europe/Paris"
 
 USE_I18N = True
 
@@ -158,11 +159,16 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'simple': {
-            'format': '\t\t\t {levelname} {message}',
+            'format': '{levelname} {message}',
             'style': '{',
         },
     },
     'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True,
+        },
         'console': {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
@@ -176,3 +182,16 @@ LOGGING = {
         },
     },
 }
+
+ADMINS = (("EpicKiwi", "me@epickiwi.fr"))
+
+# ------ EMAIL ------#
+
+EMAIL_HOST = "smtp.office365.com"
+EMAIL_PORT = 587
+EMAIL_SUBJECT_PREFIX = "[BDE Cesi Lyon]"
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = os.getenv("EMAIL_FROM")
+SERVER_EMAIL = os.getenv("EMAIL_FROM")
+EMAIL_HOST_USER = os.getenv("EMAIL_FROM")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
