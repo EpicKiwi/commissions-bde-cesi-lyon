@@ -9,7 +9,8 @@ from django.utils import timezone
 
 from bdecesi import settings
 from commissions.models import Commission, Event
-from commissions.forms import CreateCommissionForm, EditCommissionForm, EditCommissionMembersForm, EventForm
+from commissions.forms import CreateCommissionForm, EditCommissionForm, EditCommissionMembersForm, EventForm, \
+    HashtagForm
 from django.contrib import messages
 from commissions.models import Tag
 from django.db.models import Q
@@ -338,9 +339,30 @@ def manage_commission_social(request, slug):
         messages.add_message(request, messages.ERROR, "Tu ne peux pas modifier cette commission, désolé...")
         return redirect("/commissions/{}".format(com.slug))
 
+    form = HashtagForm(request.POST or None, initial={
+        'hastag': com.hashtag
+    })
+
+    if request.method == "POST" and form.is_valid():
+        cleaned_hashtag = form.cleaned_data["hastag"]
+
+        if cleaned_hashtag.startswith("#"):
+            cleaned_hashtag = cleaned_hashtag[1:]
+
+        cleaned_hashtag = cleaned_hashtag.strip()
+
+        com.hashtag = cleaned_hashtag
+        com.hashtag_definition_date = timezone.now()
+        com.save()
+
+        messages.add_message(request, messages.SUCCESS, "Hashtag mis à jour")
+        return redirect("/commissions/{}/manage/social".format(com.slug))
+
+
     return render(request, "manage_social.html", {
         'com': com,
         "active_commission_id": com.id,
         "active_commission_social": True,
+        'form': form,
         "can_change_member": com.has_change_members_permission(request)
     })

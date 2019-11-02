@@ -138,3 +138,8 @@ class EventForm(Form):
         widget=MarkdownWidget,
         required=True,
         initial=render_to_string("event_description_template.md"))
+
+
+class HashtagForm(Form):
+
+    hastag = forms.CharField(label="Hastag", required=True, max_length=100)
