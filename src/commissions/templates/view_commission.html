@@ -31,121 +31,131 @@
             <img src="/media/{{ com.banner }}" alt="Bannière de {{ com.name }}" />
         </div>
 
-        <div class="commission-body">
+            <div class="header-container">
+                <header class="commission-header">
 
-            <header class="commission-header">
-
-                <div class="logo {{ com.organization_dependant }}">
-                    <img src="/media/{{ com.logo }}" alt="Logo de {{ com.name }}">
-                </div>
-
-                <div class="info">
-                    <div class="headline">
-                        <div class="tags">
-
-                            {% if not com.is_active %}
-                                <bde-tag slot="tags">Inactive</bde-tag>
-                            {% endif %}
-
-                            {% for tag in com.tags.all %}
-                                <bde-tag slot="tags" color="{{ tag.color }}" >
-                                    {{ tag.name }}
-                                </bde-tag>
-                            {% endfor %}
-
-                        </div>
-                        {% if com.organization_dependant == "bds" %}
-                            <div class="bds-dependant" title="Dépendante du BDS"><span class="text">Dépendante du BDS</span><bde-icon icon="mdi-run"></bde-icon></div>
-                        {% endif %}
+                    <div class="logo {{ com.organization_dependant }}">
+                        <img src="/media/{{ com.logo }}" alt="Logo de {{ com.name }}">
                     </div>
-                    <h1 class="commission-name"><bde-autoresize>{{ com.name }}</bde-autoresize></h1>
-                </div>
 
-            </header>
+                    <div class="info">
+                        <div class="headline">
+                            <div class="tags">
 
-            <p class="commission-description">{{ com.short_description }}</p>
+                                {% if not com.is_active %}
+                                    <bde-tag slot="tags">Inactive</bde-tag>
+                                {% endif %}
+
+                                {% for tag in com.tags.all %}
+                                    <bde-tag slot="tags" color="{{ tag.color }}" >
+                                        {{ tag.name }}
+                                    </bde-tag>
+                                {% endfor %}
+
+                            </div>
+                            {% if com.organization_dependant == "bds" %}
+                                <div class="bds-dependant" title="Dépendante du BDS"><span class="text">Dépendante du BDS</span><bde-icon icon="mdi-run"></bde-icon></div>
+                            {% endif %}
+                        </div>
+                        <h1 class="commission-name"><bde-autoresize>{{ com.name }}</bde-autoresize></h1>
+                    </div>
 
 
-            {% if not com.is_active %}
-            <div class="inactive-modal">
-                <h3>Commission inactive</h3>
-                <p>Une commission inactive est une commission qui fut cloturée par son président ou le conseil d'administration car elle a terminé son projet ou qu'elle n'est pas assez active pour pouvoir accueillir de nouveaux membres et organiser de nouveaux événements</p>
-                <p><strong>Mais tout n'est pas perdu ! </strong> Il est encore possible de réouvrir la commission et ainsi la faire renaitre de ses cendres. Prend contact avec le conseil d'administration du BDE si tu est motivé pour devenir le nouveau président de {{ com.name }}...</p>
-            </div>
-            {% endif %}
+                    {% if not com.is_active %}
+                    <div class="inactive-modal">
+                        <h3>Commission inactive</h3>
+                        <p>Une commission inactive est une commission qui fut cloturée par son président ou le conseil d'administration car elle a terminé son projet ou qu'elle n'est pas assez active pour pouvoir accueillir de nouveaux membres et organiser de nouveaux événements</p>
+                        <p><strong>Mais tout n'est pas perdu ! </strong> Il est encore possible de réouvrir la commission et ainsi la faire renaitre de ses cendres. Prend contact avec le conseil d'administration du BDE si tu est motivé pour devenir le nouveau président de {{ com.name }}...</p>
+                    </div>
+                    {% endif %}
 
-            {% if can_manage %}
-                <div class="manage">
-                    <a href="/commissions/{{ com.slug }}/manage" class="btn btn-primary"><bde-icon icon="mdi-gear"></bde-icon> Gérer</a>
-                </div>
-            {% endif %}
+                </header>
 
-            <div class="commission-roles">
-                {% include "fragments/safe_user.html" with user=com.president role="Président·e" %}
+                <p class="commission-description">{{ com.short_description }}</p>
 
-                {% if com.deputy is not None %}
-                    {% include "fragments/safe_user.html" with user=com.deputy role="Suppléant·e" %}
+                {% if can_manage %}
+                    <div class="manage">
+                        <a href="/commissions/{{ com.slug }}/manage" class="btn btn-primary"><bde-icon icon="mdi-gear"></bde-icon> Gérer</a>
+                    </div>
                 {% endif %}
 
-                {% if com.treasurer_id != com.president_id %}
-                    {% include "fragments/safe_user.html" with user=com.treasurer role="Trésorier·ere" %}
-                {% endif %}
             </div>
-            <div class="commission-roles">
-                {% if com.get_membres %}
-                    {% for membre in com.get_membres %}
+
+            <div class="commission-body">
+
+            <div class="commission-body-content">
+
+                {% if user.is_authenticated %}
+                    <div class="commission-long-description markdown">
+                        {{ com.description | escape | markdown | safe }}
+                    </div>
+                {% else %}
+                    <div class="auth-box">
+                        <p class="ask-auth" >Pour voir toutes les infos des commissions, il suffit de te connecter avec ton compte Viacesi, clique simplement sur le bouton en dessous.</p>
+                        <a class="auth-button" href="/login?next={{ request.path }}">Se connecter avec Viacesi</a>
+                    </div>
+                {% endif %}
+
+                {%  if events %}
+                <div class="body-section">
+                    <h2 class="section-title timeline-title" >Activité de la commission</h2>
+                    <bde-timeline class="timeline">
+                        {% for event in events %}
+                            <a
+                                    href="/commissions/{{ event.commission.slug }}/event-{{ event.slug }}"
+                                    timeline-date="{{ event.event_date_start | date:"c" }}"
+                                    timeline-id="{{ event.id }}">
+                                {% include "fragments/event-card.html" %}
+                            </a>
+                        {% endfor %}
+                    </bde-timeline>
+                </div>
+                {% endif %}
+
+            </div>
+
+            <aside class="commission-body-aside">
+                <div class="commission-roles">
+                    {% include "fragments/safe_user.html" with user=com.president role="Président·e" %}
+
+                    {% if com.deputy is not None %}
+                        {% include "fragments/safe_user.html" with user=com.deputy role="Suppléant·e" %}
+                    {% endif %}
+
+                    {% if com.treasurer_id != com.president_id %}
+                        {% include "fragments/safe_user.html" with user=com.treasurer role="Trésorier·ere" %}
+                    {% endif %}
+                    {% for membre in administrative_members %}
                         {% include "fragments/safe_user.html" with user=membre.identification role=membre.role %}
                     {% endfor %}
-                {% endif %}
-                {% if not can_manage and not membre_inside and user.is_authenticated %}
-                    <div class="manage">
-                        <a href="{% url 'action_membre' com.slug 'add' %}" class="btn"><bde-icon icon="mdi-account-plus"></bde-icon> inside</a>
-                    </div>
-                {% endif %}
-                {% if membre_inside %}
-                    <div class="manage">
-                        <a href="{% url 'action_membre' com.slug 'remove' %}" class="btn"><bde-icon icon="mdi-delete-outline"></bde-icon> remove</a>
-                    </div>
-                {% endif %}
-            </div>
-            {% if user.is_authenticated %}
-                <div class="commission-long-description markdown">
-                    {{ com.description | escape | markdown | safe }}
                 </div>
-            {% else %}
-                <div class="auth-box">
-                    <p class="ask-auth" >Pour voir toutes les infos des commissions, il suffit de te connecter avec ton compte Viacesi, clique simplement sur le bouton en dessous.</p>
-                    <a class="auth-button" href="/login?next={{ request.path }}">Se connecter avec Viacesi</a>
+                {% if not primary_member %}
+                <div class="member-join">
+                    {% if membre_inside %}
+                            <a href="{% url 'member_leave' com.slug %}" class="btn">Quitter la commission&nbsp;<bde-icon icon="mdi-door"></bde-icon></a>
+                    {% else %}
+                            <a href="{% url 'member_join' com.slug %}" class="btn"><bde-icon icon="mdi-account-plus"></bde-icon>&nbsp;Rejoindre</a>
+                    {% endif %}
                 </div>
-            {% endif %}
-
-            {%  if events %}
-            <div class="body-section">
-                <h2 class="section-title timeline-title" >Activité de la commission</h2>
-                <bde-timeline class="timeline">
-                    {% for event in events %}
-                        <a
-                                href="/commissions/{{ event.commission.slug }}/event-{{ event.slug }}"
-                                timeline-date="{{ event.event_date_start | date:"c" }}"
-                                timeline-id="{{ event.id }}">
-                            {% include "fragments/event-card.html" %}
-                        </a>
+                {% endif %}
+                <div class="commission-members">
+                    {% for membre in members %}
+                        {% include "fragments/safe_user.html" with user=membre.identification role=membre.role %}
                     {% endfor %}
-                </bde-timeline>
-            </div>
-            {% endif %}
-
-            <div class="commission-meta">
-                <div class="created">
-                    Création : {{ com.creation_date | naturalday }}
                 </div>
-                {% if not com.is_active %}
-                    <div class="closed">
-                        Cloture : {{ com.creation_date | naturalday }}
-                    </div>
-                {% endif %}
-            </div>
+            </aside>
 
+        </div>
+
+        <div class="commission-meta">
+            <div class="created">
+                Création : {{ com.creation_date | naturalday }}
+            </div>
+            {% if not com.is_active %}
+                <div class="closed">
+                    Cloture : {{ com.creation_date | naturalday }}
+                </div>
+            {% endif %}
         </div>
 
     </div>

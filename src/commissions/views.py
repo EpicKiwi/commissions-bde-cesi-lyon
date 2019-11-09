@@ -2,6 +2,7 @@ import logging
 import os
 from datetime import timedelta
 
+from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
@@ -33,12 +34,17 @@ def view_commission(request, slug):
 
     events = com.events.all()
 
+    administrative_members = com.get_membres().filter(role__isnull=False).order_by("identification__first_name")
+    members = com.get_membres().filter(role__isnull=True).order_by("identification__first_name")
 
     return render(request, "view_commission.html", {
         'com': com,
         'membre_inside': com.in_commission_membre(request),
         'can_manage': com.has_change_permission(request),
         'events': events,
+        'primary_member': request.user in [com.president, com.treasurer, com.deputy],
+        "administrative_members": administrative_members,
+        "members": members
     })
 
 
@@ -249,21 +255,30 @@ def create_commission(request):
         "active_commission_creation": True
     })
 
-def action_membre(request, slug, action):
-    if not request.user.is_authenticated:
-        return redirect("/login?next={}".format(request.path))
-
+@login_required(login_url="/login")
+def commission_join(request, slug):
     com = get_object_or_404(Commission, slug=slug)
-    if action == 'add':
-        if com.is_possible_membre(request) :
-            membreCommission = MembreCommission()
-            membreCommission.identification = request.user
-            membreCommission.commission = com
-            membreCommission.permission = ''
-            membreCommission.save()
-    elif action == 'remove' :
-        if com.in_commission_membre(request) :
-            MembreCommission.objects.filter(commission = com, identification = request.user).delete()
+
+    try:
+        membership = MembreCommission.objects.get(identification=request.user, commission=com)
+    except MembreCommission.DoesNotExist:
+        membership = MembreCommission()
+        membership.identification = request.user
+        membership.commission = com
+        membership.save()
+
+    return redirect("/commissions/{}".format(com.slug))
+
+
+@login_required(login_url="/login")
+def commission_leave(request, slug):
+    com = get_object_or_404(Commission, slug=slug)
+
+    try:
+        membership = MembreCommission.objects.get(identification=request.user, commission=com)
+        membership.delete()
+    except MembreCommission.DoesNotExist:
+        pass
 
     return redirect("/commissions/{}".format(com.slug))
 
