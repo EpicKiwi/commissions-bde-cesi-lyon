@@ -150,12 +150,16 @@
     color: rgba(217, 10, 0, 0.5);
 }
 
+.modal-content {
+    max-width: 50%;
+}
+
 .president-changed-modal input {
     margin-top: 10px;
     width: 100%;
 }
 
-.president-changed-modal .toolbar {
+bde-modal .toolbar {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
@@ -331,4 +335,53 @@
         order: -1;
         margin-left: 0;
     }
+}
+
+.members-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.members-list > * {
+    width: 300px;
+    margin: 15px;
+    position: relative;
+}
+
+.members-list .actions {
+    display: none;
+
+    justify-content: flex-end;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: auto;
+}
+
+.member:hover .actions, .member:active .actions {
+    display: flex;
+}
+
+.members-list .actions > * {
+    width: auto;
+    margin-left: 10px;
+    height: 40px;
+    min-width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    background-color: var(--secondary-bg-color);
+    border-radius: 100%;
+    color: var(--primary-color);
+    cursor: pointer;
+}
+
+.members-list .actions bde-icon {
+    height: 25px;
 }

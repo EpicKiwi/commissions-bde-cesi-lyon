@@ -23,7 +23,7 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                z-index: 2100;
+                z-index: 2100 !important;
             }
 
             .container {
@@ -68,7 +68,7 @@
             }
             
             .close bde-icon {
-                width: 30px;
+                height: 30px;
             }
 
             @media screen and (max-width: 800px) {

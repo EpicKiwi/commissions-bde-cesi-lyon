@@ -139,3 +139,16 @@ class EventForm(Form):
 class MembreCommissionForm(Form):
     role = forms.CharField(label='Role', max_length=100, required=True, initial="Membre")
     identification = forms.ChoiceField(label='E-mail', required=True)
+
+
+class KickMemberForm(Form):
+    member_id = forms.IntegerField(required=True, widget=forms.HiddenInput(attrs={"class": "member-id"}))
+
+
+class PromoteMemberForm(Form):
+    member_id = forms.IntegerField(required=True, widget=forms.HiddenInput(attrs={"class": "member-id"}))
+    role = forms.CharField(required=True)
+
+
+class DemoteMemberForm(Form):
+    member_id = forms.IntegerField(required=True, widget=forms.HiddenInput(attrs={"class": "member-id"}))

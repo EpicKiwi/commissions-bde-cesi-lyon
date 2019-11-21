@@ -12,7 +12,8 @@ from django.db.models import Q
 
 from bdecesi import settings
 from commissions.models import Commission, Event, MembreCommission, Tag
-from commissions.forms import CreateCommissionForm, EditCommissionForm, EditCommissionMembersForm, EventForm, MembreCommissionForm
+from commissions.forms import CreateCommissionForm, EditCommissionForm, EditCommissionMembersForm, EventForm, \
+    MembreCommissionForm, KickMemberForm, PromoteMemberForm, DemoteMemberForm
 
 from users.models import User
 from webhooks.models import Webhook
@@ -140,13 +141,6 @@ def edit_members_commission(request, slug):
     form.fields["deputy"].queryset = User.objects.all().filter(is_active=True).exclude(id=com.president.id)
     form.fields["president"].queryset = User.objects.all().filter(is_active=True)
 
-    formMembre = MembreCommissionForm(request.POST or None)
-    choiceMembre = []
-    for membre in MembreCommission.objects.all().filter(commission=com):
-        choiceMembre.append([membre.email, membre.email])
-
-    formMembre.fields["identification"].choices = choiceMembre
-    
     if form.is_valid():
         form.save()
         messages.add_message(request, messages.SUCCESS, "Membres de la commission modifiés")
@@ -157,20 +151,102 @@ def edit_members_commission(request, slug):
         else:
             return redirect("/commissions/{}".format(com.slug))
 
-    if formMembre.is_valid():
-        MembreCommission.objects.filter(commission = com, identification = formMembre.identification).role = formMembre.role
-        messages.add_message(request, messages.SUCCESS, "Role du membre modifiés")
-        return redirect("/commissions/{}/manage/members".format(com.slug))
+    members = com.get_membres().filter(role__isnull=True).order_by("identification__first_name")
+    members_admin = com.get_membres().filter(role__isnull=False).order_by("identification__first_name")
+
+    kick_form = KickMemberForm()
 
     return render(request, "edit_members_commission.html", {
         "com": com,
         "form": form,
-        "form_member": formMembre,
         "active_commission_id": com.id,
         "active_commission_members": True,
-        "can_change_member": True
+        "can_change_member": True,
+        "members": members,
+        "members_admin": members_admin,
+        'kick_form': kick_form
     })
 
+@login_required(login_url="/login")
+def kick_member(request, slug):
+    com = get_object_or_404(Commission, slug=slug)
+
+    if not com.has_change_permission(request):
+        messages.add_message(request, messages.ERROR, "Tu ne peux pas modifier cette commission, désolé...")
+        return redirect("/commissions/{}".format(com.slug))
+
+    if not com.has_change_members_permission(request):
+        messages.add_message(request, messages.ERROR, "Tu ne peux pas modifier les membres de cette commission, désolé...")
+        return redirect("/commissions/{}/manage".format(com.slug))
+
+    if request.method == "POST":
+        kick_form = KickMemberForm(request.POST)
+        if kick_form.is_valid():
+            try:
+                member = com.get_membres().get(identification_id=kick_form.cleaned_data["member_id"])
+                member.delete()
+                messages.add_message(request, messages.SUCCESS, "{} expulsé".format(member.identification.first_name))
+            except MembreCommission.DoesNotExist:
+                pass
+        else:
+            messages.add_message(request, messages.ERROR, "Le formulaire n'est pas correcte")
+
+    return redirect("/commissions/{}/manage/members".format(slug))
+
+@login_required(login_url="/login")
+def promote_member(request, slug):
+    com = get_object_or_404(Commission, slug=slug)
+
+    if not com.has_change_permission(request):
+        messages.add_message(request, messages.ERROR, "Tu ne peux pas modifier cette commission, désolé...")
+        return redirect("/commissions/{}".format(com.slug))
+
+    if not com.has_change_members_permission(request):
+        messages.add_message(request, messages.ERROR, "Tu ne peux pas modifier les membres de cette commission, désolé...")
+        return redirect("/commissions/{}/manage".format(com.slug))
+
+    if request.method == "POST":
+        promote_form = PromoteMemberForm(request.POST)
+        if promote_form.is_valid():
+            try:
+                member = com.get_membres().get(identification_id=promote_form.cleaned_data["member_id"])
+                member.role = promote_form.cleaned_data["role"]
+                member.save()
+                messages.add_message(request, messages.SUCCESS, "{} promu au rang de {}".format(member.identification.first_name,promote_form.cleaned_data["role"]))
+            except MembreCommission.DoesNotExist:
+                pass
+        else:
+            messages.add_message(request, messages.ERROR, "Le formulaire n'est pas correcte")
+
+    return redirect("/commissions/{}/manage/members".format(slug))
+
+
+@login_required(login_url="/login")
+def demote_member(request, slug):
+    com = get_object_or_404(Commission, slug=slug)
+
+    if not com.has_change_permission(request):
+        messages.add_message(request, messages.ERROR, "Tu ne peux pas modifier cette commission, désolé...")
+        return redirect("/commissions/{}".format(com.slug))
+
+    if not com.has_change_members_permission(request):
+        messages.add_message(request, messages.ERROR, "Tu ne peux pas modifier les membres de cette commission, désolé...")
+        return redirect("/commissions/{}/manage".format(com.slug))
+
+    if request.method == "POST":
+        demote_form = DemoteMemberForm(request.POST)
+        if demote_form.is_valid():
+            try:
+                member = com.get_membres().get(identification_id=demote_form.cleaned_data["member_id"])
+                member.role = None
+                member.save()
+                messages.add_message(request, messages.SUCCESS, "{} rétrogradé".format(member.identification.first_name))
+            except MembreCommission.DoesNotExist:
+                pass
+        else:
+            messages.add_message(request, messages.ERROR, "Le formulaire n'est pas correcte")
+
+    return redirect("/commissions/{}/manage/members".format(slug))
 
 def create_commission(request):
 
@@ -266,6 +342,7 @@ def commission_join(request, slug):
         membership.identification = request.user
         membership.commission = com
         membership.save()
+        messages.add_message(request, messages.SUCCESS, "Bienvenue dans la commission {}, {}".format(com.name, request.user.first_name))
 
     return redirect("/commissions/{}".format(com.slug))
 
@@ -277,6 +354,8 @@ def commission_leave(request, slug):
     try:
         membership = MembreCommission.objects.get(identification=request.user, commission=com)
         membership.delete()
+        messages.add_message(request, messages.SUCCESS, "Tu as quitté la commission {}, {}".format(com.name, request.user.first_name))
+
     except MembreCommission.DoesNotExist:
         pass
 
