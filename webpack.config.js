@@ -58,7 +58,7 @@ module.exports = {
     optimization: {
         minimize: process.env.ENVIRONMENT != "development",
         splitChunks: {
-            chunks: "all"
+            chunks: "async"
         }
     }
 }

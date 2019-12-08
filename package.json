@@ -18,6 +18,12 @@
   },
   "homepage": "https://bdecesilyon.fr",
   "devDependencies": {
+    "@babel/core": "^7.7.5",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/plugin-proposal-decorators": "^7.7.4",
+    "@babel/plugin-syntax-dynamic-import": "^7.7.4",
+    "@babel/preset-env": "^7.7.6",
+    "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^3.0.0",
     "concurrently": "^5.0.0",
     "dotenv": "^8.2.0",
@@ -25,5 +31,9 @@
     "webpack": "^4.41.2",
     "webpack-bundle-tracker": "^0.4.3",
     "webpack-cli": "^3.3.10"
+  },
+  "dependencies": {
+    "core-js": "^2.5.7",
+    "lit-element": "^2.2.1"
   }
 }
