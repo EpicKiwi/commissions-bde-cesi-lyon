@@ -11,6 +11,8 @@ RUN apt-get install -y curl software-properties-common && \
 
 RUN apt-get install postgresql-client -y
 
+RUN mkdir /code
+
 COPY package.json /code
 COPY package-lock.json /code
 
