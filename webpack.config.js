@@ -15,6 +15,20 @@ const entries = glob.sync("src/*/assets/bundles/*.js", {nodir: true})
         return newobj
     }, {})
 
+const apps = glob.sync("src/*/")
+    .reduce((obj, pth) => {
+        let newobj = {...obj}
+        let appname = path.basename(pth)
+        newobj["@"+appname] = pth
+        return newobj
+    }, {})
+
+console.log("Detected apps : ")
+for(let name in apps){
+    console.log(" - ", name, ":", apps[name])
+}
+console.log("")
+
 console.log("Detected bundle files : ")
 for(let name in entries){
     console.log(" - ", name, ":", entries[name])
@@ -33,6 +47,11 @@ module.exports = {
         new CleanWebpackPlugin()
     ],
 
+    resolve: {
+        alias: {
+            ...apps
+        }
+    },
 
     mode: process.env.ENVIRONMENT == "development" ? "development" : "production",
     devtool: process.env.ENVIRONMENT == "development" ? "eval-source-map" : "source-map",
