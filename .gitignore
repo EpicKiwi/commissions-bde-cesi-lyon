@@ -110,6 +110,8 @@ front-dist/*
 src/user-media/*
 !src/user-media/**/.gitkeep
 src/static-files/*
+src/built-assets/*
+src/webpack-stats.json
 proxy/static-files/*
 
 node_modules
