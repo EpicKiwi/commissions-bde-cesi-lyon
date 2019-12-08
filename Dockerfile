@@ -6,7 +6,7 @@ RUN pip install -r /tmp/requirements.txt
 RUN apt-get update -y
 
 RUN apt-get install -y curl software-properties-common && \
-    curl -sL https://deb.nodesource.com/setup_13.x | sudo bash - && \
+    curl -sL https://deb.nodesource.com/setup_13.x | bash - && \
     apt-get install nodejs
 
 RUN apt-get install postgresql-client -y
