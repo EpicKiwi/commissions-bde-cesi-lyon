@@ -103,7 +103,7 @@ DATABASES = {
 if os.getenv("DB_ENVIRONMENT", "production") == "development":
     DATABASES["default"] = {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, '../db.sqlite3'),
     }
 
 
@@ -137,7 +137,7 @@ LOGIN_URL = "/auth"
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'fr-fr'
+LANGUAGE_CODE = 'fr'
 
 TIME_ZONE = "Europe/Paris"
 

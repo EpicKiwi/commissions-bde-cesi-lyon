@@ -1,11 +1,10 @@
 requests
 markdown
 pillow
-django
+django>=3.0
 python-dotenv
 gunicorn
 psycopg2-binary
 raven
-django
 djangorestframework
 django-url-filter
