@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "concurrently --kill-others \"cd src && VERSION=$(./get_version.sh) python3 manage.py runserver\" \"webpack-cli --watch\"",
     "build": "webpack-cli",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
