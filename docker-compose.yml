@@ -19,8 +19,8 @@ services:
     depends_on:
       - db
     volumes:
-      - user-media:/code/user-media
-      - static-files:/code/static-files
+      - user-media:/code/src/user-media
+      - static-files:/code/src/static-files
     networks:
       - overlay
     deploy:
