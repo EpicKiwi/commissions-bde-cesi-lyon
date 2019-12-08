@@ -1,5 +1,6 @@
 {% extends "layouts/base.html" %}
 {% load static %}
+{% load render_bundle from webpack_loader %}
 
 {% block notitle %}{% endblock %}
 
@@ -15,6 +16,7 @@
     <script src="{% static "components/shelf.js" %}"></script>
     <script src="{% static "components/autoresize.js" %}"></script>
     <script src="{% static "components/timeline.js" %}"></script>
+    {% render_bundle 'index' %}
 {% endblock %}
 
 {% block body %}
