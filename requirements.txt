@@ -9,3 +9,4 @@ raven
 djangorestframework
 django-url-filter
 django-webpack-loader
+django-qr-code

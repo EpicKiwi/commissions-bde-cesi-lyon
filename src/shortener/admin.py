@@ -10,3 +10,4 @@ class ShortUrlAdmin(admin.ModelAdmin):
     list_display = ("short_url", "url", "date")
     search_fields = ('slug', 'url')
     ordering = ('-date',)
+    change_form_template = "change_short_url.html"
