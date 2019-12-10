@@ -70,6 +70,70 @@
         submitButton.disabled = false
     }
 
+    function wantKickUser(id,name){
+        let modal = document.getElementById("kick-member-modal")
+
+        Array.from(modal.querySelectorAll(".member-name")).forEach(el => el.innerHTML = name)
+        modal.querySelector(".member-id").value = id
+
+        modal.open()
+
+    }
+
+    function wantDemoteUser(id,name){
+        let modal = document.getElementById("demote-member-modal")
+
+        Array.from(modal.querySelectorAll(".member-name")).forEach(el => el.innerHTML = name)
+        modal.querySelector(".member-id").value = id
+
+        modal.open()
+
+    }
+
+    function wantPromoteUser(id,name){
+        let modal = document.getElementById("promote-member-modal")
+
+        Array.from(modal.querySelectorAll(".member-name")).forEach(el => el.innerHTML = name)
+        modal.querySelector(".member-id").value = id
+
+        modal.open()
+
+    }
+
+    function initMembers(){
+        Array.from(document.querySelectorAll(".member")).forEach( el => {
+            let id = el.dataset.id
+            let name = el.dataset.name
+
+            el.querySelector(".kick").addEventListener("click", e => wantKickUser(id, name) )
+            let promoteBtn = el.querySelector(".promote")
+            if(promoteBtn)
+                promoteBtn.addEventListener("click", e => wantPromoteUser(id, name) )
+            let demoteBtn = el.querySelector(".demote")
+            if(demoteBtn)
+                demoteBtn.addEventListener("click", e => wantDemoteUser(id, name) )
+        })
+
+        let kickModal = document.getElementById("kick-member-modal")
+        kickModal.querySelector(".modal-cancel").addEventListener("click", e => {
+            e.preventDefault()
+            kickModal.close()
+        })
+
+        let demoteModal = document.getElementById("dempote-member-modal")
+        demoteModal.querySelector(".modal-cancel").addEventListener("click", e => {
+            e.preventDefault()
+            demoteModal.close()
+        })
+
+        let promoteModal = document.getElementById("kick-member-modal")
+        promoteModal.querySelector(".modal-cancel").addEventListener("click", e => {
+            e.preventDefault()
+            kickModal.close()
+        })
+    }
+
     document.addEventListener("DOMContentLoaded",initForm);
+    document.addEventListener("DOMContentLoaded",initMembers);
 
 })()

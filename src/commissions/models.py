@@ -128,12 +128,13 @@ class MembreCommission(models.Model):
     # L'ID du membre
     identification = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='membre_identification')
     commission = models.ForeignKey(Commission, on_delete=models.SET_NULL, null=True, related_name='membre_commission')
+    join_date = models.DateTimeField(auto_now_add=True)
 
     # Les permissions du membre (TODO)
-    role = models.CharField(max_length=20, default='Membre')
+    role = models.CharField(max_length=50, default=None, null=True, blank=True)
 
     def __str__(self):
-        return role
+        return self.identification.email + (" ( " + self.role + " )") if self.role is not None else ""
 
 class Event(models.Model):
     """

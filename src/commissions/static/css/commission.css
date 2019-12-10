@@ -16,7 +16,7 @@
     object-fit: cover;
 }
 
-.commission-body {
+.header-container {
     z-index: 1;
     position: relative;
 
@@ -27,18 +27,18 @@
 }
 
 @media screen and (min-width: 1700px) {
-    .commission-body {
+    .header-container {
         width: 60%;
     }
 }
 
 @media screen and (max-width: 800px) {
-    .commission-body {
+    .header-container {
         width: 90%;
     }
 }
 
-.commission-body.reduced {
+.header-container.reduced {
     padding-top: 50px;
 }
 
@@ -85,7 +85,7 @@
         margin-left: 0;
     }
 
-    .commission-body.reduced {
+    .header-container.reduced {
         padding-top: 10px;
     }
 }
@@ -197,7 +197,7 @@
 
 @media screen and (max-width: 800px) {
 
-    .commission-body {
+    .header-container {
         padding-top: 95px;
     }
 
@@ -241,26 +241,17 @@
     font-style: italic;
 }
 
-.commission-roles {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-}
-
-.commission-roles > * {
-    width: auto;
-    margin: 10px 0;
-}
-
-.commission-events, .commission-roles, .commission-long-description {
+.commission-events, .commission-long-description {
     padding-bottom: 30px;
 }
 
 .commission-meta {
     text-align: right;
     font-style: italic;
+
+    width: 90%;
+    margin: 50px auto 100px;
+
 }
 
 .commission-meta > * {
@@ -312,7 +303,7 @@
 }
 
 @media print {
-    .commission-body {
+    .header-container {
         width: 90% !important;
     }
 
@@ -334,6 +325,76 @@
 
     .event-desc {
         padding: 30px 0;
+    }
+
+}
+
+.commission-body {
+
+    width: 90%;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    align-items: flex-start;
+}
+
+.commission-body-content {
+    flex: 1;
+    max-width: 100%;
+}
+
+.commission-body-aside {
+    width: 250px;
+    margin-left: 25px;
+}
+
+.commission-roles, .member-join {
+    margin-bottom: 25px;
+}
+
+.commission-roles > *, .commission-members > * {
+    width: auto;
+    margin-bottom: 10px;
+}
+
+@media screen and (max-width: 1200px) {
+
+    .commission-body {
+        flex-direction: column;
+    }
+
+    .commission-body-aside {
+        order: -1;
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .commission-roles {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .commission-roles > * {
+        width: 250px;
+        margin: 5px 10px;
+    }
+
+    .commission-members {
+        display: none;
+    }
+
+    .member-join {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .member-join > .btn {
+        width: auto;
+        margin: 5px 10px;
     }
 
 }

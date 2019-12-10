@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from commissions.models import Commission, Tag, Event, Post, PostImage, CommissionSocialQuester
+from commissions.models import Commission, Tag, Event, Post, PostImage, CommissionSocialQuester, MembreCommission
 
 
 @admin.register(Commission)
@@ -11,11 +11,22 @@ class CommissionsAdmin(admin.ModelAdmin):
     search_fields = ('name', 'short_description', 'description', 'president', "treasurer", "deputy")
     ordering = ('is_organization', '-creation_date')
 
+
+@admin.register(MembreCommission)
+class MembersAdmin(admin.ModelAdmin):
+    date_hierarchy = "join_date"
+    list_display = ("identification", "commission", "role")
+    list_filter = ("commission", "role")
+    search_fields = ("identification", "commission", "role")
+    ordering = ('commission', 'role', 'identification')
+
+
 @admin.register(Tag)
 class TagsAdmin(admin.ModelAdmin):
     list_display = ("name", "color")
     search_fields = ("name", "color")
     ordering = ("name",)
+
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
