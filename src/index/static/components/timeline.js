@@ -106,8 +106,16 @@
             .timeline-segment-content {
                 display: flex;
                 justify-content: flex-start;
-                align-items: center;
+                align-items: flex-start;
                 flex-wrap: wrap;
+            }
+
+            :host(.nowrap) .timeline-segment-content {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                flex-wrap: nowrap;
             }
             
             

@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "Site de gestion de la vie asso du BDE CESI Lyon",
   "scripts": {
-    "dev": "cd src && VERSION=$(../get_version.sh) python3 manage.py runserver",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "storybook": "start-storybook"
+    "dev": "concurrently --kill-others \"cd src && VERSION=$(./get_version.sh) python3 manage.py runserver\" \"webpack-cli --watch\"",
+    "build": "webpack-cli",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -18,11 +18,22 @@
   },
   "homepage": "https://bdecesilyon.fr",
   "devDependencies": {
-    "@babel/core": "^7.6.4",
-    "@storybook/addon-knobs": "^5.2.5",
-    "@storybook/addon-notes": "^5.2.5",
-    "@storybook/addon-storysource": "^5.2.5",
-    "@storybook/html": "^5.2.5",
-    "babel-loader": "^8.0.6"
+    "@babel/core": "^7.7.5",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/plugin-proposal-decorators": "^7.7.4",
+    "@babel/plugin-syntax-dynamic-import": "^7.7.4",
+    "@babel/preset-env": "^7.7.6",
+    "babel-loader": "^8.0.6",
+    "clean-webpack-plugin": "^3.0.0",
+    "concurrently": "^5.0.0",
+    "dotenv": "^8.2.0",
+    "glob": "^7.1.6",
+    "webpack": "^4.41.2",
+    "webpack-bundle-tracker": "^0.4.3",
+    "webpack-cli": "^3.3.10"
+  },
+  "dependencies": {
+    "core-js": "^2.5.7",
+    "lit-element": "^2.2.1"
   }
 }

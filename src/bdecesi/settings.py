@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'documentation',
     'webhooks',
     'adminutils',
+    'api',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -47,6 +48,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'webpack_loader',
+    'shortener',
+    'qr_code'
 ]
 
 MIDDLEWARE = [
@@ -100,7 +106,7 @@ DATABASES = {
 if os.getenv("DB_ENVIRONMENT", "production") == "development":
     DATABASES["default"] = {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, '../db.sqlite3'),
     }
 
 
@@ -134,7 +140,7 @@ LOGIN_URL = "/auth"
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'fr-fr'
+LANGUAGE_CODE = 'fr'
 
 TIME_ZONE = "Europe/Paris"
 
@@ -148,13 +154,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
-
 MEDIA_URL = "/media/"
-
 MEDIA_ROOT = os.path.join(BASE_DIR, "user-media")
 
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static-files")
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "built-assets")
+]
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'CACHE': not DEBUG,
+        'BUNDLE_DIR_NAME': 'bundles/', # must end with slash
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+        'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
+    }
+}
 
 LOGGING = {
     'version': 1,
@@ -185,7 +200,7 @@ LOGGING = {
     },
 }
 
-ADMINS = (("EpicKiwi", "me@epickiwi.fr"))
+ADMINS = (("EpicKiwi", "me@epickiwi.fr"),)
 
 # ------ EMAIL ------#
 
@@ -197,3 +212,19 @@ DEFAULT_FROM_EMAIL = os.getenv("EMAIL_FROM")
 SERVER_EMAIL = os.getenv("EMAIL_FROM")
 EMAIL_HOST_USER = os.getenv("EMAIL_FROM")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
+
+# ----- API --------#
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 100,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.FormParser',
+    ]
+}

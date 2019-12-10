@@ -103,13 +103,15 @@ venv.bak/
 .mypy_cache/
 
 .idea
-src/db.sqlite3
+db.sqlite3
 
 front-dist/*
 !front-dist/.gitkeep
 src/user-media/*
 !src/user-media/**/.gitkeep
 src/static-files/*
+src/built-assets/*
+src/webpack-stats.json
 proxy/static-files/*
 
 node_modules

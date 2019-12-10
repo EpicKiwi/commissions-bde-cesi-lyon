@@ -17,6 +17,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from api import urls as apiUrls
 from bdecesi import settings
 
 urlpatterns = [
@@ -26,6 +27,8 @@ urlpatterns = [
     path('commissions/', include("commissions.urls")),
     path('admin/', include("adminutils.urls")),
     path('admin/', admin.site.urls),
+    path('go/', include("shortener.urls")),
+    path('api/', include(apiUrls.router.urls)),
 ]
 
 if settings.DEBUG:

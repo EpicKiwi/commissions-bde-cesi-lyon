@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.text import slugify
 from django.utils import timezone
@@ -190,3 +191,60 @@ class Event(models.Model):
     def __str__(self):
         return self.name
 
+
+class Post(models.Model):
+
+    date = models.DateTimeField(help_text="Date de publication du post")
+
+    content = models.CharField(max_length=280)
+
+    commission = models.ForeignKey(Commission, on_delete=models.CASCADE, related_name="posts")
+
+    source = models.CharField(max_length=50, choices=[
+        ('internal', 'Système interne'),
+        ('twitter', 'Twitter')
+    ], default="internal", help_text="Provenance du post")
+
+    external_id = models.CharField(max_length=255, null=True, blank=True, help_text="Identifiant du post sur le site externe (Twitter, Instagram, etc...)")
+
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="posts", null=True, blank=True)
+
+    author_text = models.CharField(max_length=50, help_text="Texte alternatif de l'auteur dans le cas où l'utilisateur soit Null")
+
+    author_image = models.CharField(max_length=255, blank=True, null=True, help_text="URL d'image de profil de l'auteur dans le cas ou l'utilisateur est null")
+
+    is_moderated = models.BooleanField(help_text="Si le poste est modéré et masqué aux utilisateurs", default=False)
+
+    def has_even_medias(self):
+        return self.images.all().count() % 2 == 0
+
+    def __str__(self):
+        return "Post de {} le {}".format(self.author if self.author is not None else self.author_text, self.date)
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.date is None:
+            self.date = timezone.now()
+        return super().save(force_insert, force_update, using, update_fields)
+
+
+class PostImage(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="images")
+    image = models.ImageField(upload_to="posts/images")
+
+
+def quester_query_validator(value):
+    if value[0] != "#" and value[0] != "@":
+        raise ValidationError('{} is not a valid query, must begin with # or @'.format(value))
+    if " " in value:
+        raise ValidationError('{} is not a valid query, must not contain space'.format(value))
+
+
+class CommissionSocialQuester(models.Model):
+    commission = models.ForeignKey(Commission, on_delete=models.CASCADE, related_name="social_questers")
+    query = models.CharField(max_length=50, validators=[quester_query_validator])
+    since_date = models.DateTimeField()
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.since_date is None:
+            self.since_date = timezone.now()
+        return super().save(force_insert, force_update, using, update_fields)

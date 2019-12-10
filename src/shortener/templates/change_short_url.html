@@ -1,0 +1,15 @@
+{% extends "admin/change_form.html" %}
+{% load qr_code %}
+{% load absurl %}
+
+{% block after_related_objects %}
+    {% if original.slug %}
+    <div style="text-align: center">
+        {% absurl "short_url" original.slug as full_url %}
+        <p style="font-size: 30px">{{ full_url }}</p>
+        <p>
+            {% qr_from_text full_url size="L" %}
+        </p>
+    </div>
+    {% endif %}
+{% endblock %}
