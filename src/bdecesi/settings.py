@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'rest_framework',
     'rest_framework.authtoken',
-    'webpack_loader'
+    'webpack_loader',
+    'shortener'
 ]
 
 MIDDLEWARE = [

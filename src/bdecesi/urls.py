@@ -27,7 +27,8 @@ urlpatterns = [
     path('commissions/', include("commissions.urls")),
     path('admin/', include("adminutils.urls")),
     path('admin/', admin.site.urls),
-    path('api/', include(apiUrls.router.urls))
+    path('go/', include("shortener.urls")),
+    path('api/', include(apiUrls.router.urls)),
 ]
 
 if settings.DEBUG:
