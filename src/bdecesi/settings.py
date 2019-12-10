@@ -200,7 +200,7 @@ LOGGING = {
     },
 }
 
-ADMINS = (("EpicKiwi", "me@epickiwi.fr"))
+ADMINS = (("EpicKiwi", "me@epickiwi.fr"),)
 
 # ------ EMAIL ------#
 
