@@ -26,24 +26,27 @@
             <img src="/media/{{ com.banner }}" alt="Bannière de {{ com.name }}" />
         </div>
 
-        <div class="commission-body reduced">
+    <div class="header-container reduced">
 
-            <header class="commission-header">
+        <header class="commission-header">
 
-                <div class="compact-commission">
-                    {% include "fragments/compact-commission.html" %}
+            <div class="compact-commission">
+                {% include "fragments/compact-commission.html" %}
 
-                    {% if can_manage %}
-                        <a href="/commissions/{{ com.slug }}/manage/event-{{ event.slug }}" class="btn btn-light"><bde-icon icon="mdi-gear"></bde-icon> Gérer</a>
-                    {% endif %}
+                {% if can_manage %}
+                    <a href="/commissions/{{ com.slug }}/manage/event-{{ event.slug }}" class="btn btn-light"><bde-icon icon="mdi-gear"></bde-icon> Gérer</a>
+                {% endif %}
 
-                    {% if not com.is_organization %}
-                        <a href="/commissions/{{ com.slug }}" class="btn btn-light">Voir la commission <bde-icon icon="mdi-chevron-right"></bde-icon></a>
-                    {% endif %}
+                {% if not com.is_organization %}
+                    <a href="/commissions/{{ com.slug }}" class="btn btn-light">Voir la commission <bde-icon icon="mdi-chevron-right"></bde-icon></a>
+                {% endif %}
 
-                </div>
+            </div>
 
-            </header>
+        </header>
+    </div>
+
+        <div class="commission-body column">
 
             <bde-event-card
     
@@ -88,7 +91,7 @@
 
             </bde-event-card>
 
-            <div class="commission-roles">
+            <div class="commission-roles inline">
 
                     {% include "fragments/safe_user.html" with user=com.president role="Président·e" %}
 
@@ -99,6 +102,10 @@
                     {% if com.treasurer_id != com.president_id %}
                         {% include "fragments/safe_user.html" with user=com.treasurer role="Trésorier·ere" %}
                     {% endif %}
+
+                    {% for membre in administrative_members %}
+                        {% include "fragments/safe_user.html" with user=membre.identification role=membre.role %}
+                    {% endfor %}
 
             </div>
 
