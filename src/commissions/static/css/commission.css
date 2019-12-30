@@ -39,7 +39,8 @@
 }
 
 .header-container.reduced {
-    padding-top: 50px;
+    padding-top: 20px;
+    padding-bottom: 10px;
 }
 
 .compact-commission {
@@ -340,6 +341,12 @@
     align-items: flex-start;
 }
 
+.commission-body.column {
+    flex-direction: column;
+    width: 70%;
+    margin: auto;
+}
+
 .commission-body-content {
     flex: 1;
     max-width: 100%;
@@ -354,9 +361,23 @@
     margin-bottom: 25px;
 }
 
+.commission-roles.inline {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
 .commission-roles > *, .commission-members > * {
     width: auto;
     margin-bottom: 10px;
+}
+
+.commission-roles.inline > * {
+    margin-left: 10px;
+    margin-right: 25px;
 }
 
 @media screen and (max-width: 1200px) {

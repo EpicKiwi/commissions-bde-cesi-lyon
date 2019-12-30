@@ -52,6 +52,7 @@ def view_commission(request, slug):
 def view_event(request, slug, eventslug):
     com = get_object_or_404(Commission, slug=slug)
     event = None
+    administrative_members = com.get_membres().filter(role__isnull=False).order_by("identification__first_name")
 
     try:
         event = Event.objects.get(slug=eventslug)
@@ -65,7 +66,8 @@ def view_event(request, slug, eventslug):
     return render(request, "view_event.html", {
         'com': com,
         'event': event,
-        'can_manage': event.has_change_event_permission(request)
+        'can_manage': event.has_change_event_permission(request),
+        'administrative_members': administrative_members
     })
 
 def commission_dashboard(request, slug):
