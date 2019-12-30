@@ -155,6 +155,8 @@ def edit_members_commission(request, slug):
     members_admin = com.get_membres().filter(role__isnull=False).order_by("identification__first_name")
 
     kick_form = KickMemberForm()
+    demote_form = DemoteMemberForm()
+    promote_form = PromoteMemberForm()
 
     return render(request, "edit_members_commission.html", {
         "com": com,
@@ -164,7 +166,9 @@ def edit_members_commission(request, slug):
         "can_change_member": True,
         "members": members,
         "members_admin": members_admin,
-        'kick_form': kick_form
+        'kick_form': kick_form,
+        'promote_form': promote_form,
+        'demote_form': demote_form
     })
 
 @login_required(login_url="/login")

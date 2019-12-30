@@ -147,7 +147,7 @@ class KickMemberForm(Form):
 
 class PromoteMemberForm(Form):
     member_id = forms.IntegerField(required=True, widget=forms.HiddenInput(attrs={"class": "member-id"}))
-    role = forms.CharField(required=True)
+    role = forms.CharField(required=True, widget=forms.TextInput(attrs={"placeholder": "Rôle du membre promu"}), initial="Administrateur")
 
 
 class DemoteMemberForm(Form):

@@ -98,9 +98,22 @@
 
         modal.open()
 
+        modal.querySelector(".modal-cancel").addEventListener("click", e => {
+            e.preventDefault()
+            modal.close()
+        })
+
     }
 
+    let membersInitialized = false
+
     function initMembers(){
+
+        if(membersInitialized)
+            return
+        else
+            membersInitialized = true
+
         Array.from(document.querySelectorAll(".member")).forEach( el => {
             let id = el.dataset.id
             let name = el.dataset.name
@@ -120,7 +133,7 @@
             kickModal.close()
         })
 
-        let demoteModal = document.getElementById("dempote-member-modal")
+        let demoteModal = document.getElementById("demote-member-modal")
         demoteModal.querySelector(".modal-cancel").addEventListener("click", e => {
             e.preventDefault()
             demoteModal.close()

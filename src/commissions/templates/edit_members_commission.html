@@ -146,7 +146,7 @@
                     <p>Es tu vraiment sûr de vouloir rétrograder&nbsp;<span class="member-name">!!!</span>&nbsp;de la commission ?</p>
                     <p><span class="member-name">!!!</span>&nbsp;ne sera plus considéré comme faisant partie de l'administration de la commission et sera uniquement considéré comme un simple membre de la commission.</p>
                     {% csrf_token %}
-                    {{ demote_member }}
+                    {{ demote_form }}
                     <div class="toolbar">
                         <button class="btn" id="modal-submit">Rétrograder&nbsp;<span class="member-name">!!!</span></button>
                         <button class="btn btn-primary modal-cancel" type="button">Annuler</button>
@@ -160,7 +160,7 @@
                     <p>Tu peux promouvoir&nbsp;<span class="member-name">!!!</span>&nbsp;et lui donner un certain rôle dans ta commission</p>
                     <p>Aucune permission supplémentaire (Edition de la commission, creation d'événements) ne lui sera accordé mais il sera affiché en tant que membre du conseil d'administration de la commission.</p>
                     {% csrf_token %}
-                    {{ kick_form }}
+                    {{ promote_form }}
                     <div class="toolbar">
                         <button class="btn modal-cancel" type="button">Annuler</button>
                         <button class="btn btn-primary">Promouvoir&nbsp;<span class="member-name">!!!</span></button>
