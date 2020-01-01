@@ -1,0 +1,7 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}{% include "fragments/safe_full_name.html" with user=view_user %}{% endblock %}
+
+{% block body %}
+    <h1>Salut {% include "fragments/safe_full_name.html" with user=view_user %} !</h1>
+{% endblock %}

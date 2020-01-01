@@ -69,10 +69,16 @@ def logoutView(request):
 
 
 def view_profile(request, slug=None):
-    return None
+    user = request.user if slug is None else get_object_or_404(User, slug=slug)
+
+    return render(request, "view_profile.html", {
+        'view_user': user
+    })
 
 
 def edit_profile(request, slug=None):
     user = request.user if slug is None else get_object_or_404(User, slug=slug)
 
-    return render(request, "edit_profile.html")
+    return render(request, "edit_profile.html", {
+        'view_user': user
+    })

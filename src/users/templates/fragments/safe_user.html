@@ -9,7 +9,7 @@
         {% endif %}
 
         {% if perms.users.view_full_profile %}
-            href="mailto:{{ user.email }}"
+            href="{% url "profile" slug=user.slug %}"
             title="Contacter {% include "fragments/safe_full_name.html" %}"
         {% endif %}
 >
