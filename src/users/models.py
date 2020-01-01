@@ -1,6 +1,11 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+import hashlib
+
+from django.utils.text import slugify
+
+from shortener.random_readable import generate_random_string
 
 
 class UserManager(BaseUserManager):
@@ -50,6 +55,8 @@ class User(AbstractUser):
     "L'adresse Email de l'utilisateur"
     email = models.EmailField(max_length=255, unique=True)
 
+    slug = models.SlugField(unique=True, blank=False, null=False)
+
     # Image de profil de l'utilisateur
     profile_picture = models.ImageField(upload_to="user/profile", blank=True, null=True)
 
@@ -64,7 +71,22 @@ class User(AbstractUser):
 
     objects = UserManager()
 
-    class Meta(AbstractUser.Meta):
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = self.generate_slug()
+            self.slug = slugify(self.slug)
+
+        try:
+            super().save(*args, **kwargs)
+        except ValueError:
+            self.slug = None
+            return super().save(*args, **kwargs)
+
+    def generate_slug(self):
+        return "{}-{}".format(self.first_name, generate_random_string())
+
+
+class Meta(AbstractUser.Meta):
 
         permissions = [
             ("view_full_profile", "Can view a complete profile of other users")

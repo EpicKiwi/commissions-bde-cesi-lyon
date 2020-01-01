@@ -5,9 +5,10 @@ from random import randrange
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from bdecesi.keys import AUTH_VIACESI_TENANT_ID, AUTH_VIACESI_APP_ID
+from users.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -65,3 +66,13 @@ def logoutView(request):
     messages.add_message(request, messages.SUCCESS, "À bientôt {}".format(request.user.first_name))
     logout(request)
     return redirect("/")
+
+
+def view_profile(request, slug=None):
+    return None
+
+
+def edit_profile(request, slug=None):
+    user = request.user if slug is None else get_object_or_404(User, slug=slug)
+
+    return render(request, "edit_profile.html")
