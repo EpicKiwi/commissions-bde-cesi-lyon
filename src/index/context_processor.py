@@ -66,7 +66,7 @@ def currentDocuments(request):
 
 def supportTeam(request):
 
-    support = User.objects.filter(support_member="bde").exclude(id=request.user.id)
+    support = User.objects.filter(support_member="bde")
 
     return {
         'support_team': support,

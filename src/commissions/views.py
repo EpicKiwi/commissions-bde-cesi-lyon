@@ -42,7 +42,7 @@ def view_commission(request, slug):
 
     serialized = JSONRenderer().render(CommissionSerializer(com, context={"request": request}).data)
 
-    support = User.objects.filter(support_member=com.organization_dependant).exclude(id=request.user.id)
+    support = User.objects.filter(support_member=com.organization_dependant)
 
     return render(request, "view_commission.html", {
         'com': com,
