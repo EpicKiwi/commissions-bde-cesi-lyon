@@ -56,15 +56,31 @@
             </div>
         
             </div>
-            <aside class="dashboard-aside dashboard-section">
-                <h3 class="section-title">Quelques astuces</h3>
-                <p>Pour bien gèrer ta commission, nous avons rédigé un <a href="/guide"><bde-icon icon="fa-solid:book"></bde-icon> guide</a> qui te donne diverses astuces et qui t'explique les différentes procédures nécéssaires au bon fonctionnement de ta commission.</p>
-                <p>Voici quelques pages qui te seront peut être utiles : </p>
-                <ul>
-                    <li><a href="/guide/vie-asso/guide-du-createur"><bde-icon icon="fa-solid:book"></bde-icon> Guide général du créateur de commission</a></li>
-                    <li><a href="/guide/vie-asso/financement"><bde-icon icon="fa-solid:book"></bde-icon> Se faire financer</a></li>
-                    <li><a href="/guide/vie-asso/conseils-de-communication"><bde-icon icon="fa-solid:book"></bde-icon> Communiquer éfficacement</a></li>
-                </ul>
+            <aside class="dashboard-aside">
+
+                {% if support %}
+                <div class="dashboard-section aside-section">
+                    <h3 class="section-title">Besoin d'aide ?</h3>
+                    <p>On est là pour t'aider, envoie donc un mail au BDE</p>
+                    <div class="support">
+                        {% for user in support %}
+                            {% include "fragments/safe_user.html" %}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="dashboard-section aside-section">
+                    <h3 class="section-title">Quelques astuces</h3>
+                    <p>Pour bien gèrer ta commission, nous avons rédigé un <a href="/guide"><bde-icon icon="fa-solid:book"></bde-icon> guide</a> qui te donne diverses astuces et qui t'explique les différentes procédures nécéssaires au bon fonctionnement de ta commission.</p>
+                    <p>Voici quelques pages qui te seront peut être utiles : </p>
+                    <ul>
+                        <li><a href="/guide/vie-asso/guide-du-createur"><bde-icon icon="fa-solid:book"></bde-icon> Guide général du créateur de commission</a></li>
+                        <li><a href="/guide/vie-asso/financement"><bde-icon icon="fa-solid:book"></bde-icon> Se faire financer</a></li>
+                        <li><a href="/guide/vie-asso/conseils-de-communication"><bde-icon icon="fa-solid:book"></bde-icon> Communiquer éfficacement</a></li>
+                    </ul>
+                </div>
+
             </aside>
         </div>
 {% endblock %}

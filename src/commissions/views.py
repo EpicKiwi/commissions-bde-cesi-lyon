@@ -92,13 +92,16 @@ def commission_dashboard(request, slug):
     upcoming_events = Event.objects.filter(event_date_end__gte=timezone.now(), commission=com).order_by("event_date_start")
     passed_events = Event.objects.filter(event_date_end__lt=timezone.now(), commission=com).order_by("event_date_start")
 
+    support = User.objects.filter(support_member=com.organization_dependant)
+
     return render(request, "dashboard_commission.html", {
         'com': com,
         "active_commission_id": com.id,
         "can_change_member": com.has_change_members_permission(request),
         "upcoming_events": upcoming_events,
         "passed_events": passed_events,
-        'can_create_event': com.has_add_event_permission(request)
+        'can_create_event': com.has_add_event_permission(request),
+        "support": support
     })
 
 
