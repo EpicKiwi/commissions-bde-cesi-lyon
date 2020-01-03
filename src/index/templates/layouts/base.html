@@ -215,5 +215,11 @@
     {% endfor %}
 </script>
 
+
+{% if not code_is_prod %}
+    {% load render_bundle from webpack_loader %}
+    {% render_bundle 'dev-debug' %}
+{% endif %}
+
 </body>
 </html>

@@ -132,7 +132,8 @@ AUTH_USER_MODEL = 'users.User'
 
 AUTHENTICATION_BACKENDS = [
     'users.authentication.ViacesiAuthBackend',
-    'django.contrib.auth.backends.ModelBackend'
+    'django.contrib.auth.backends.ModelBackend',
+    'rules.permissions.ObjectPermissionBackend'
 ]
 
 LOGIN_URL = "/auth"

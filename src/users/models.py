@@ -62,6 +62,11 @@ class User(AbstractUser):
     "L'utlisateur est il un référent pour le support, son nom et adresse email sera affiché sur le site en tant que référent"
     support_member = models.BooleanField(default=False)
 
+    "Si l'utilisateur est créé via un utilisateur Viacesi"
+    @property
+    def is_viacesi(self):
+        return self.viacesi_id is not None and self.viacesi_id != ""
+
     objects = UserManager()
 
     class Meta(AbstractUser.Meta):

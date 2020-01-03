@@ -4,7 +4,10 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.text import slugify
 from django.utils import timezone
+from rules.contrib.models import RulesModel
 
+from commissions import rules
+import rules as baseRules
 from users.models import User
 
 
@@ -28,7 +31,8 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
-class Commission(models.Model):
+
+class Commission(RulesModel):
     """
     Le modèle contant toutes les informations d'une commission
     """
@@ -74,12 +78,14 @@ class Commission(models.Model):
 
     # L'organisation en charge de la gestion de la commission (BDE ou BDS)
     organization_dependant = models.CharField(max_length=100, choices=[("bde", "BDE"), ("bds", "BDS")], default="bde", help_text="L'organisation à laquelle appartiens la commission")
-    
+
     # Si la "commission" est un organisation, c'est a dire qu'elle n'apparait pas sur le liste des commission mais peut profiter de toutes les fonctionnalités des commissions comme les events, les hashtags, etc..
     is_organization = models.BooleanField(default=False, help_text="Définie que cet instance est une organisation et non une commission, une organisation n'apparait pas dans la liste des commissions mais dispose de toutes les fonctionnalités associés")
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        if self.slug is None or self.slug == "":
+            self.slug = slugify(self.name)
+
         super(Commission, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -100,26 +106,34 @@ class Commission(models.Model):
     def has_change_members_permission(self, request):
         return self.is_active and request.user.get_username() == self.president.get_username()
 
-    def add_membre_commission(self, request):
-        return self.is_active and not self.has_team_member(request)
-
     def in_commission_membre(self, request):
         for membre in MembreCommission.objects.filter(commission = self) :
             if(request.user.get_username() == membre.identification.get_username()):
                 return self.is_active
         return False
 
-    def is_possible_membre(self, request):
-        if(self.add_membre_commission(request)):
-             return False
-
-        return not in_commission_membre(request)
-
     def get_membres(self):
         return MembreCommission.objects.filter(commission = self)
-      
+
     def has_add_event_permission(self, request):
         return self.has_change_permission(request)
+
+    class Meta:
+
+        rules_permissions = {
+
+            "view":             baseRules.always_allow,
+
+            "change":           baseRules.is_active &
+                                  baseRules.is_authenticated &
+                                  rules.is_active_commission &
+                                  rules.is_commission_team_member,
+
+            "change_members":   rules.is_active_commission &
+                                  rules.is_commission_president,
+
+        }
+
 
 class MembreCommission(models.Model):
     """
@@ -135,6 +149,7 @@ class MembreCommission(models.Model):
 
     def __str__(self):
         return self.identification.email + (" ( " + self.role + " )") if self.role is not None else ""
+
 
 class Event(models.Model):
     """

@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions, DjangoObjectPermissions
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from api.serializers import UserSerializer, CommissionSerializer, PostSerializer, SocialQuesterSerializer, \
@@ -11,7 +11,7 @@ from users.models import User
 class UserViewSet(viewsets.ModelViewSet):
 	queryset = User.objects.all()
 	serializer_class = UserSerializer
-	permission_classes = [IsAuthenticated]
+	permission_classes = [IsAuthenticated, DjangoModelPermissions, DjangoObjectPermissions]
 	filter_backends = [DjangoFilterBackend]
 	filter_fields = [
 			"id",
@@ -23,7 +23,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class CommissionViewSet(viewsets.ModelViewSet):
 	queryset = Commission.objects.all()
 	serializer_class = CommissionSerializer
-	permission_classes = [IsAuthenticated]
+	permission_classes = [IsAuthenticated, DjangoModelPermissions, DjangoObjectPermissions]
 	filter_backends = [DjangoFilterBackend]
 	filter_fields = [
 			"id",
@@ -47,7 +47,7 @@ class CommissionViewSet(viewsets.ModelViewSet):
 class PostViewSet(viewsets.ModelViewSet):
 	queryset = Post.objects.all()
 	serializer_class = PostSerializer
-	permission_classes = [IsAuthenticated]
+	permission_classes = [IsAuthenticated, DjangoModelPermissions, DjangoObjectPermissions]
 	filter_backends = [DjangoFilterBackend]
 	filter_fields = [
 			"id",
@@ -65,7 +65,7 @@ class PostViewSet(viewsets.ModelViewSet):
 class SocialQuesterViewSet(viewsets.ModelViewSet):
 	queryset = CommissionSocialQuester.objects.all()
 	serializer_class = SocialQuesterSerializer
-	permission_classes = [IsAuthenticated]
+	permission_classes = [IsAuthenticated, DjangoModelPermissions, DjangoObjectPermissions]
 	filter_backends = [DjangoFilterBackend]
 	filter_fields = [
 			"id",
@@ -78,7 +78,7 @@ class SocialQuesterViewSet(viewsets.ModelViewSet):
 class PostImagesViewSet(viewsets.ModelViewSet):
 	queryset = PostImage.objects.all()
 	serializer_class = PostImageSerializer
-	permission_classes = [IsAuthenticated]
+	permission_classes = [IsAuthenticated, DjangoModelPermissions, DjangoObjectPermissions]
 	filter_backends = [DjangoFilterBackend]
 	filter_fields = [
 		"id",

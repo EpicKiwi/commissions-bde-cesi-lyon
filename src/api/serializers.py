@@ -69,7 +69,8 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 			"email",
 			"profile_picture",
 			"is_active",
-			"support_member"
+			"support_member",
+			"is_viacesi"
 		]
 
 
