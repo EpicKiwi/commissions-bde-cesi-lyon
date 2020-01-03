@@ -419,3 +419,21 @@
     }
 
 }
+
+.modal-content {
+    max-width: 600px;
+}
+
+bde-modal .support {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+bde-modal .support > * {
+    width: auto;
+    margin-bottom: 10px;
+}
