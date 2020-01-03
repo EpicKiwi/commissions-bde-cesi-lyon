@@ -29,6 +29,21 @@
                 goTo(el.sectionName)
             })
         })
+
+        document.getElementById("id_tags").addEventListener("change", el => {
+            let select = el.target
+            checkSport(select)
+        })
+        checkSport(document.getElementById("id_tags"))
+    }
+
+    function checkSport(select){
+            let hasSport = Array.from(select.children).find(el => el.selected && el.hasAttribute("data-sport-related"))
+            if(hasSport){
+                document.getElementById("bds-warning").classList.remove("inactive")
+            } else {
+                document.getElementById("bds-warning").classList.add("inactive")
+            }
     }
 
     function getCurrentSection() {

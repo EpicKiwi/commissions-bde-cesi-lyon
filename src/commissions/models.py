@@ -24,6 +24,9 @@ class Tag(models.Model):
     # Couleur du tag
     color = models.CharField(max_length=20)
 
+    # Si le champ est en rapport avec le sport pour inciter à prendre une adhésion au BDS
+    sport_related = models.BooleanField(default=False, help_text="Le tag est en rapport avec du sport, les utilisateurs seront encouragés à adhèrer au BDS")
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super(Tag, self).save(*args, **kwargs)
