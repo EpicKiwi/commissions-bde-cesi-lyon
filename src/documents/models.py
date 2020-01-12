@@ -1,5 +1,9 @@
 from django.db import models
 from django.utils import timezone
+from rules.contrib.models import RulesModel
+
+from users.models import User
+import rules as baseRules
 
 
 class Document(models.Model):
@@ -24,3 +28,17 @@ class Document(models.Model):
             for file in conflicting_files:
                 file.current_version = False
                 file.save()
+
+
+class Upload(RulesModel):
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    file = models.FileField(upload_to="uploads", help_text="Le fichier pouvant être téléchargé")
+    created_by = models.ForeignKey(User, related_name="uploads", on_delete=models.CASCADE)
+
+    class Meta:
+
+        rules_permissions = {
+            "view":             baseRules.is_authenticated,
+            "create":           baseRules.is_authenticated
+        }

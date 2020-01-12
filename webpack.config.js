@@ -15,11 +15,11 @@ const entries = glob.sync("src/*/assets/bundles/*.js", {nodir: true})
         return newobj
     }, {})
 
-const apps = glob.sync("src/*/")
+const apps = glob.sync("src/*")
     .reduce((obj, pth) => {
         let newobj = {...obj}
         let appname = path.basename(pth)
-        newobj["@"+appname] = pth
+        newobj["@"+appname] = path.resolve(__dirname, path.join(pth,"assets/"))
         return newobj
     }, {})
 

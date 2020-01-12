@@ -1,5 +1,6 @@
 {% extends "layouts/base.html" %}
 {% load static %}
+{% load render_bundle from webpack_loader %}
 
 {% block title %}Créer une commission{% endblock %}
 
@@ -12,9 +13,9 @@
     <script src="{% static "js/create-commission.js" %}"></script>
     <script src="{% static "components/tag-selector.js" %}"></script>
     <script src="{% static "components/user-autocomplete.js" %}"></script>
-    <script src="{% static "components/markdown.js" %}"></script>
     <script src="{% static "components/image-selector.js" %}"></script>
     <script src="{% static "components/tag.js" %}"></script>
+    {% render_bundle 'create-commission' %}
 {% endblock %}
 
 {% block header %}
