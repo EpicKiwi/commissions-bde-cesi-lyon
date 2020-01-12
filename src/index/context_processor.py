@@ -14,6 +14,12 @@ def availableCommissions(request):
         'userCommissions': commissions
     }
 
+def userMemberCommission(request):
+    commissions = Commission.objects.filter(membres__identification=request.user.id).order_by("name")
+    return {
+        'userMemberCommissions': commissions
+    }
+
 def currentVersion(request):
 
     version = os.getenv('VERSION', "")

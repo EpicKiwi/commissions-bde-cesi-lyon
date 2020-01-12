@@ -53,7 +53,8 @@ def view_commission(request, slug):
         "administrative_members": administrative_members,
         "members": members,
         "serialized_commission": serialized.decode("utf8"),
-        "support": support
+        "support": support,
+        'view_commission_id': com.id
     })
 
 

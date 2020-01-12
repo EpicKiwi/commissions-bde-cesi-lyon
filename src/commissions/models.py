@@ -143,8 +143,8 @@ class MembreCommission(models.Model):
     Les membre de commission commissions
     """
     # L'ID du membre
-    identification = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='membre_identification')
-    commission = models.ForeignKey(Commission, on_delete=models.SET_NULL, null=True, related_name='membre_commission')
+    identification = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='membres')
+    commission = models.ForeignKey(Commission, on_delete=models.SET_NULL, null=True, related_name='membres')
     join_date = models.DateTimeField(auto_now_add=True)
 
     # Les permissions du membre (TODO)

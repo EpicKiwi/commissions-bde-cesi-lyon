@@ -101,9 +101,11 @@
         {% endif %}
         <li><a href="/guide" class="clickable{% if active_guide %} active{% endif %}">Guide de la Vie Asso</a></li>
     </ul>
+
     {% if userCommissions %}
         <div class="separator"></div>
     {% endif %}
+
     <ul class="nav">
         {% for com in userCommissions %}
             <li><a href="/commissions/{{ com.slug }}/manage" class="clickable small-commission{% if active_commission_id and com.id == active_commission_id %} active{% endif %}">
@@ -123,6 +125,19 @@
             {% endif %}
         {% endfor %}
     </ul>
+
+    {% if userMemberCommissions %}
+        <div class="separator"></div>
+    {% endif %}
+
+    <ul class="nav">
+        {% for com in userMemberCommissions %}
+            <li><a href="/commissions/{{ com.slug }}" class="clickable small-commission{% if view_commission_id and com.id == view_commission_id %} active{% endif %}">
+                {% include "fragments/compact-commission.html" %}
+            </a></li>
+        {% endfor %}
+    </ul>
+
     <div class="filler"></div>
 
     {# Equipe de support du BDE #}
