@@ -1,5 +1,6 @@
 {% extends "layouts/base.html" %}
 {% load static %}
+{% load render_bundle from webpack_loader %}
 
 {% block title %}Gerer {{ com.name }}{% endblock %}
 
@@ -10,11 +11,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js" ></script>
     <script src="{% static "components/tag-selector.js" %}"></script>
-    <script src="{% static "components/markdown.js" %}"></script>
     <script src="{% static "components/image-selector.js" %}"></script>
     <script src="{% static "components/tag.js" %}"></script>
     <script src="{% static "components/pulse.js" %}"></script>
     <script src="{% static "js/edit-commission.js" %}"></script>
+    {% render_bundle 'edit-commission' %}
 {% endblock %}
 
 {% block header %}

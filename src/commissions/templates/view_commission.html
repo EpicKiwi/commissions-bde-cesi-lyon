@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{% static "css/commission.css" %}" />
     <link rel="stylesheet" href="{% static "css/framework.css" %}" />
     <link rel="stylesheet" href="{% static "css/markdown.css" %}" />
+    <script src="{% static "components/modal.js" %}"></script>
     <script src="{% static "components/timeline.js" %}"></script>
     {% render_bundle 'view-commission' %}
 
@@ -131,9 +132,9 @@
                 {% if not primary_member %}
                 <div class="member-join">
                     {% if membre_inside %}
-                            <a href="{% url 'member_leave' com.slug %}" class="btn">Quitter la commission&nbsp;<bde-icon icon="mdi-door"></bde-icon></a>
+                            <a id="member-leave" href="{% url 'member_leave' com.slug %}" class="btn">Quitter la commission&nbsp;<bde-icon icon="mdi-door"></bde-icon></a>
                     {% else %}
-                            <a href="{% url 'member_join' com.slug %}" class="btn"><bde-icon icon="mdi-account-plus"></bde-icon>&nbsp;Rejoindre</a>
+                            <a id="member-join" href="{% url 'member_join' com.slug %}" class="btn"><bde-icon icon="mdi-account-plus"></bde-icon>&nbsp;Rejoindre</a>
                     {% endif %}
                 </div>
                 {% endif %}
@@ -159,4 +160,41 @@
 
     </div>
 
+{% endblock %}
+
+{% block end %}
+
+    {% if user.is_authenticated and com.organization_dependant == "bds" %}
+    <bde-modal id="join-bds">
+        <div class="modal-content modal-bds">
+            <h3 class="modal-title">Commission sportive</h3>
+            <div class="markdown">
+                <p>Tu va rejoindre une commission dépendante du <strong>BDS</strong>. Cela ne change pas grand chose à part que tu aura besoin d'<strong>adhèrer au BDS</strong> pour pouvoir éfféctuer les activités de la commission. Cela implique de payer <strong>15€ par an</strong> pour financer toutes les activités sportives de la vie asso.</p>
+                <p>Tu trouvera plus d'informations sur la page du guide <a href="/guide/bds/presentation" target="_blank"><bde-icon icon="fa-solid:book"></bde-icon> Présentation du BDS</a>.</p>
+            </div>
+
+            {% if support %}
+            <div class="markdown">
+                <p>{{support | pluralize:"Ton,Tes"}} contact{{support | pluralize:"s"}} au BDS :</p>
+            </div>
+            <div class="support">
+                {% for user in support %}
+                    {% include "fragments/safe_user.html" %}
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="markdown">
+                <p>Si tu est déjà adhérent clique simplement sur le bouton ci-dessous pour rejoindre la commission</p>
+            </div>
+            <div class="toolbar">
+                <a href="{% url 'member_join' com.slug %}" class="btn btn-primary"><bde-icon icon="mdi-account-plus"></bde-icon>&nbsp;Rejoindre</a>
+            </div>
+        </div>
+    </bde-modal>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+    <script type="application/json" id="commission-json" >{{ serialized_commission | safe }}</script>
+    {% endif %}
 {% endblock %}

@@ -67,7 +67,12 @@ class User(AbstractUser):
     is_active = models.BooleanField(default=True)
 
     "L'utlisateur est il un référent pour le support, son nom et adresse email sera affiché sur le site en tant que référent"
-    support_member = models.BooleanField(default=False)
+    support_member = models.CharField(max_length=50, choices=[("bde", "BDE"), ("bds", "BDS")], null=True, blank=True, default=None)
+
+    "Si l'utilisateur est créé via un utilisateur Viacesi"
+    @property
+    def is_viacesi(self):
+        return self.viacesi_id is not None and self.viacesi_id != ""
 
     objects = UserManager()
 

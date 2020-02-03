@@ -9,7 +9,9 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 from django.contrib import messages
 from django.db.models import Q
+from rest_framework.renderers import JSONRenderer
 
+from api.serializers import CommissionSerializer
 from bdecesi import settings
 from commissions.models import Commission, Event, MembreCommission, Tag
 from commissions.forms import CreateCommissionForm, EditCommissionForm, EditCommissionMembersForm, EventForm, \
@@ -38,6 +40,10 @@ def view_commission(request, slug):
     administrative_members = com.get_membres().filter(role__isnull=False).order_by("identification__first_name")
     members = com.get_membres().filter(role__isnull=True).order_by("identification__first_name")
 
+    serialized = JSONRenderer().render(CommissionSerializer(com, context={"request": request}).data)
+
+    support = User.objects.filter(support_member=com.organization_dependant)
+
     return render(request, "view_commission.html", {
         'com': com,
         'membre_inside': com.in_commission_membre(request),
@@ -45,7 +51,10 @@ def view_commission(request, slug):
         'events': events,
         'primary_member': request.user in [com.president, com.treasurer, com.deputy],
         "administrative_members": administrative_members,
-        "members": members
+        "members": members,
+        "serialized_commission": serialized.decode("utf8"),
+        "support": support,
+        'view_commission_id': com.id
     })
 
 
@@ -84,13 +93,16 @@ def commission_dashboard(request, slug):
     upcoming_events = Event.objects.filter(event_date_end__gte=timezone.now(), commission=com).order_by("event_date_start")
     passed_events = Event.objects.filter(event_date_end__lt=timezone.now(), commission=com).order_by("event_date_start")
 
+    support = User.objects.filter(support_member=com.organization_dependant)
+
     return render(request, "dashboard_commission.html", {
         'com': com,
         "active_commission_id": com.id,
         "can_change_member": com.has_change_members_permission(request),
         "upcoming_events": upcoming_events,
         "passed_events": passed_events,
-        'can_create_event': com.has_add_event_permission(request)
+        'can_create_event': com.has_add_event_permission(request),
+        "support": support
     })
 
 

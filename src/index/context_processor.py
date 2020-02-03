@@ -14,6 +14,15 @@ def availableCommissions(request):
         'userCommissions': commissions
     }
 
+def userMemberCommission(request):
+    if not request.user.is_authenticated:
+        return {}
+
+    commissions = Commission.objects.filter(membres__identification=request.user.id).order_by("name")
+    return {
+        'userMemberCommissions': commissions
+    }
+
 def currentVersion(request):
 
     version = os.getenv('VERSION', "")
@@ -66,7 +75,7 @@ def currentDocuments(request):
 
 def supportTeam(request):
 
-    support = User.objects.filter(support_member=True).exclude(id=request.user.id)
+    support = User.objects.filter(support_member="bde")
 
     return {
         'support_team': support,

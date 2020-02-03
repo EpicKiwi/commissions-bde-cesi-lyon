@@ -3,6 +3,7 @@ from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 
 from commissions.models import Post, Commission, CommissionSocialQuester, PostImage
+from documents.models import Upload
 from users.models import User
 
 
@@ -69,7 +70,8 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 			"email",
 			"profile_picture",
 			"is_active",
-			"support_member"
+			"support_member",
+			"is_viacesi"
 		]
 
 
@@ -83,4 +85,24 @@ class SocialQuesterSerializer(serializers.HyperlinkedModelSerializer):
 			"query",
 			"since_date",
 			"commission_id"
+		]
+
+
+class UploadSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = Upload
+		fields = [
+			"url",
+			"id",
+			"created_at",
+			"file",
+			"created_by"
+		]
+
+
+class UploadCreateSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = Upload
+		fields = [
+			"file"
 		]

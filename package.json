@@ -33,7 +33,9 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
+    "axios": "^0.19.1",
     "core-js": "^2.5.7",
-    "lit-element": "^2.2.1"
+    "lit-element": "^2.2.1",
+    "simplemde": "^1.11.2"
   }
 }

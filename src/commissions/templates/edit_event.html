@@ -1,13 +1,14 @@
 {% extends "layouts/dashboard_page.html" %}
 {% load static %}
+{% load render_bundle from webpack_loader %}
 
 {% block dashboardhead %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js" ></script>
-    <script src="{% static "components/markdown.js" %}"></script>
     <script src="{% static "components/image-selector.js" %}"></script>
     <script src="{% static "components/datetimepicker.js" %}"></script>
     <link rel="stylesheet" href="{% static "css/markdown.css" %}" />
+    {% render_bundle 'edit-event' %}
 {% endblock %}
 
 {% block dashboardtoolbar %}

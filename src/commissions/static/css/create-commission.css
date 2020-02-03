@@ -183,3 +183,27 @@
     }
 
 }
+
+.bds-warning {
+    width: 100%;
+    max-width: 800px;
+    background: var(--bds-color);
+    color: white;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 30px auto;
+}
+
+.bds-warning a {
+    color: white !important;
+}
+
+.bds-warning .title {
+    font-size: 35px;
+    text-align: center;
+    margin: 10px 0 30px;
+}
+
+.bds-warning.inactive {
+    display: none;
+}

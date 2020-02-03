@@ -294,6 +294,30 @@ input:not([type="checkbox"]):not(:empty):invalid, .form-field:not(:empty):invali
     margin: 20px 0;
 }
 
+.modal-bds {
+    border: solid 5px var(--bds-color);
+}
+
+bde-modal .toolbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 20px;
+}
+
+bde-modal label{
+    margin: 20px 10% 5px;
+    width: 80%;
+    display: block;
+    font-size: 14px;
+}
+
+bde-modal input[type="text"]{
+    margin: 0 10%;
+    width: 80%;
+}
+
 /* ----------- Auth Box ----------- */
 
 .auth-box {

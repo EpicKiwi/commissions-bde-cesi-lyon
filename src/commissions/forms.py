@@ -31,6 +31,8 @@ class TagSelectorWidget(forms.SelectMultiple):
 
         if type(self.choices.queryset[index]) is Tag:
             attributes = {"data-color" : self.choices.queryset[index].color}
+            if self.choices.queryset[index].sport_related:
+                attributes["data-sport-related"] = "true"
         else:
             attributes = None
 
