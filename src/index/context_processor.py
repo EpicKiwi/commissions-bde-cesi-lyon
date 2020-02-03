@@ -15,6 +15,9 @@ def availableCommissions(request):
     }
 
 def userMemberCommission(request):
+    if not request.user.is_authenticated:
+        return {}
+
     commissions = Commission.objects.filter(membres__identification=request.user.id).order_by("name")
     return {
         'userMemberCommissions': commissions
