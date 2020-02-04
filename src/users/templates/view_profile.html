@@ -1,7 +1,30 @@
 {% extends "layouts/base.html" %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "css/profile.css" %}">
+{% endblock %}
 
 {% block title %}{% include "fragments/safe_full_name.html" with user=view_user %}{% endblock %}
 
 {% block body %}
-    <h1>Salut {% include "fragments/safe_full_name.html" with user=view_user %} !</h1>
+
+    <div class="profile-body">
+
+        <div class="profile-header">
+
+            <div class="profile-picture {% if not view_user.profile_picture %}placeholder{% endif %}">
+                <img src="/media/{{ view_user.profile_picture }}" alt="Image de profil de {% include "fragments/safe_full_name.html" with user=view_user %}"/>
+            </div>
+
+            <h2 class="full-name">{% include "fragments/safe_full_name.html" with user=view_user %}</h2>
+
+        </div>
+
+        <div class="profile-content">
+
+        </div>
+
+    </div>
+
 {% endblock %}
