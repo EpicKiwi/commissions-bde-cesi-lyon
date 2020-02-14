@@ -21,29 +21,78 @@
 
 {% block body %}
 
-    <div class="jumbo">
-        <div class="title-wrapper">
-            <h2 class="jumbo-title" >Viens <bde-multiword>
-                <span>t'amuser</span>
-                <span>faire du sport</span>
-                <span>découvrir</span>
-                <span>créer</span>
-                <span>faire des rencontres</span>
-                <span>manger</span>
-                <span>jouer</span>
-                <span>inventer</span>
-                <span>discuter</span>
-                <span>t'entrainer</span>
-            </bde-multiword> le jeudi après-midi</h2>
-        </div>
-        <p class="jumbo-content" >Tu peux dès maintenant créer ta commission et être financé par le BDE pour toutes les activités de la vie associative ! Sois créatif, tout est permis !</p>
-        <div class="buttons">
-            <a class="button primary" href="/commissions">Parcourir les commissions</a>
-            {% if not user.is_authenticated or perms.commissions.add_commission %}
-                <a class="button" href="/commissions/create">Créer une commission</a>
-            {% endif %}
-        </div>
-    </div>
+    <bde-parallax-carousel class="jumbo">
+        {% if last_news %}
+        <bde-parallax-carousel-slide>
+            <div data-carousel-role="background" class="jumbo-background" >
+                <img src="{% static "img/newspaper.jpg" %}" />
+            </div>
+            <div data-carousel-role="foreground" class="jumbo-flex">
+                <h2 class="jumbo-title" >La gazette du {{ last_news.created_at | date:"d F" }} est arrivée</h2>
+                <p class="jumbo-content" >Lis la gazette dès maintenant !</p>
+                <div class="buttons">
+                    <a class="button primary" href="/media/{{ last_news.file }}">Lire la gazette</a>
+                </div>
+            </div>
+        </bde-parallax-carousel-slide>
+        {% endif %}
+        {% if highlight_events %}
+        <bde-parallax-carousel-slide>
+            <div data-carousel-role="background" class="jumbo-background" >
+                <img src="/media/{{ highlight_events.first.commission.banner }}" />
+            </div>
+            <div data-carousel-role="foreground" class="jumbo-flex">
+                <h2 class="jumbo-title" >Les événements à venir</h2>
+                <div class="jumbo-horizontal jumbo-events">
+                {% for event in highlight_events %}
+                    <a href="/commissions/{{ event.commission.slug }}/event-{{ event.slug }}">
+                        {% include "fragments/event-card.html" %}
+                    </a>
+                {% endfor %}
+                </div>
+            </div>
+        </bde-parallax-carousel-slide>
+        {% endif %}
+        {% if curated_commission %}
+        <bde-parallax-carousel-slide>
+            <div data-carousel-role="background" class="jumbo-background" >
+                <img src="/media/{{ curated_commission.banner }}" />
+            </div>
+            <div data-carousel-role="foreground" class="jumbo-flex">
+                <h2 class="jumbo-title" >Une commission à découvrir</h2>
+                {% include "fragments/commission-card.html" with com=curated_commission %}
+            </div>
+        </bde-parallax-carousel-slide>
+        {% endif %}
+        <bde-parallax-carousel-slide>
+            <div data-carousel-role="background" class="jumbo-background" >
+                <img src="{% static "img/cesi.png" %}" />
+            </div>
+            <div data-carousel-role="foreground" class="jumbo-flex">
+                <div class="title-wrapper">
+                    <h2 class="jumbo-title" >Viens <bde-multiword>
+                        <span>t'amuser</span>
+                        <span>faire du sport</span>
+                        <span>découvrir</span>
+                        <span>créer</span>
+                        <span>faire des rencontres</span>
+                        <span>manger</span>
+                        <span>jouer</span>
+                        <span>inventer</span>
+                        <span>discuter</span>
+                        <span>t'entrainer</span>
+                    </bde-multiword> le jeudi après-midi</h2>
+                </div>
+                <p class="jumbo-content" >Tu peux dès maintenant créer ta commission et être financé par le BDE pour toutes les activités de la vie associative ! Sois créatif, tout est permis !</p>
+                <div class="buttons">
+                    <a class="button primary" href="/commissions">Parcourir les commissions</a>
+                    {% if not user.is_authenticated or perms.commissions.add_commission %}
+                        <a class="button" href="/commissions/create">Créer une commission</a>
+                    {% endif %}
+                </div>
+            </div>
+        </bde-parallax-carousel-slide>
+    </bde-parallax-carousel>
 
     {% if quick_links %}
     <ul class="quick-link-list">
