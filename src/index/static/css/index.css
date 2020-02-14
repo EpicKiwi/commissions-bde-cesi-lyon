@@ -28,6 +28,11 @@
     flex-wrap: wrap;
 }
 
+.jumbo-standard-text {
+    text-align: left;
+    color: var(--text-color);
+}
+
 .jumbo-horizontal > * {
     margin: 0 5px;
 }

@@ -43,7 +43,7 @@
             </div>
             <div data-carousel-role="foreground" class="jumbo-flex">
                 <h2 class="jumbo-title" >Les événements à venir</h2>
-                <div class="jumbo-horizontal jumbo-events">
+                <div class="jumbo-horizontal jumbo-events jumbo-standard-text">
                 {% for event in highlight_events %}
                     <a href="/commissions/{{ event.commission.slug }}/event-{{ event.slug }}">
                         {% include "fragments/event-card.html" %}
@@ -60,7 +60,9 @@
             </div>
             <div data-carousel-role="foreground" class="jumbo-flex">
                 <h2 class="jumbo-title" >Une commission à découvrir</h2>
-                {% include "fragments/commission-card.html" with com=curated_commission %}
+                <div class="jumbo-standard-text">
+                    {% include "fragments/commission-card.html" with com=curated_commission %}
+                </div>
             </div>
         </bde-parallax-carousel-slide>
         {% endif %}
