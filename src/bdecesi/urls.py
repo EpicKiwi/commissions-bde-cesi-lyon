@@ -29,6 +29,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('go/', include("shortener.urls")),
     path('api/', include(apiUrls.router.urls)),
+    path('api/', include(apiUrls.urlpatterns)),
 ]
 
 if settings.DEBUG:

@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'webpack_loader',
     'shortener',
-    'qr_code'
+    'qr_code',
+    'rest_framework_swagger'
 ]
 
 MIDDLEWARE = [
@@ -220,6 +221,9 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 100,
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',

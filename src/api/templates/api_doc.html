@@ -1,0 +1,23 @@
+{% load render_bundle from webpack_loader %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>BDE CESI Lyon API</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    {% render_bundle 'dev-debug' %}
+  </head>
+  <body>
+    <redoc
+            spec-url='{% url "api_docs_schema" %}'
+    ></redoc>
+    <script src="https://cdn.jsdelivr.net/npm/redoc/bundles/redoc.standalone.js"> </script>
+  </body>
+</html>

@@ -37,11 +37,12 @@ class UserManager(BaseUserManager):
 
         return self._create_user(email, password, **extra_fields)
 
+
 class User(AbstractUser):
     """
-    Modèle personnalisé d'utilisateurs pour inclure les informations d'authentification CESI
-    et les informations relatives à la plateforme
-    """
+	Un utilisateur peut être un étudiant du CESI (connecté avec un compte Viacesi), une personne n'ayant pas de compte viacesi ou un utiiisateur "fictif" utilisé par une application par exemple.
+	Tout les étudiants du CESI ne sont pas inscrit de base mais sont onscrit lors de leur première connexion.
+	"""
 
     USERNAME_FIELD = "email"
     EMAIL_FIELD = "email"
@@ -60,9 +61,11 @@ class User(AbstractUser):
     is_active = models.BooleanField(default=True)
 
     "L'utlisateur est il un référent pour le support, son nom et adresse email sera affiché sur le site en tant que référent"
-    support_member = models.CharField(max_length=50, choices=[("bde", "BDE"), ("bds", "BDS")], null=True, blank=True, default=None)
+    support_member = models.CharField(max_length=50, choices=[("bde", "BDE"), ("bds", "BDS")], null=True, blank=True,
+                                      default=None)
 
     "Si l'utilisateur est créé via un utilisateur Viacesi"
+
     @property
     def is_viacesi(self):
         return self.viacesi_id is not None and self.viacesi_id != ""
@@ -70,7 +73,6 @@ class User(AbstractUser):
     objects = UserManager()
 
     class Meta(AbstractUser.Meta):
-
         permissions = [
             ("view_full_profile", "Can view a complete profile of other users")
         ]
