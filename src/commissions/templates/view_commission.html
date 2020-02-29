@@ -116,7 +116,9 @@
 
             <aside class="commission-body-aside">
                 <div class="commission-roles">
+                    <bde-tooltip show content="Clique sur un utilisateur pour le contacter" anchor="left">
                     {% include "fragments/safe_user.html" with user=com.president role="Président·e" %}
+                    </bde-tooltip>
 
                     {% if com.deputy is not None %}
                         {% include "fragments/safe_user.html" with user=com.deputy role="Suppléant·e" %}
