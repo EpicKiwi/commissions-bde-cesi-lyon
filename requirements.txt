@@ -11,3 +11,4 @@ django-url-filter
 django-webpack-loader
 django-qr-code
 rules
+pyyaml
