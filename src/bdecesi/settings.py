@@ -52,8 +52,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'webpack_loader',
     'shortener',
-    'qr_code',
-    'rest_framework_swagger'
+    'qr_code'
 ]
 
 MIDDLEWARE = [
