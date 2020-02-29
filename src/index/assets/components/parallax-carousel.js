@@ -92,6 +92,13 @@ class ParallaxCarousel extends LitElement {
         this.currentSlide = (this.currentSlide + 1) % this.slides.length
     }
 
+    previousSlide(){
+        this.currentSlide -= 1
+        if(this.currentSlide < 0){
+            this.currentSlide = this.slides.length + this.currentSlide
+        }
+    }
+
     render() {
 
         let progress = ""
@@ -193,12 +200,34 @@ class ParallaxCarousel extends LitElement {
                 transition: linear width;
             }
             
+            .next-slide-button {
+                position: absolute;
+                right: 0;
+                top: 0;
+                height: 100%;
+                width: 30%;
+                background: transparent;
+                z-index: 20;
+            }
+            
+            .previous-slide-button {
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                width: 30%;
+                background: transparent;
+                z-index: 20;
+            }
+            
             </style>
             <div class="wrapper" @mouseenter="${() => this.pause()}" @mouseleave="${() => this.start()}">
                 <div class="progress-bars">${progress}</div>
                 <div class="content">
                     <slot></slot>
                 </div>
+                <div class="next-slide-button" @click="${() => this.nextSlide()}"></div>
+                <div class="previous-slide-button" @click="${() => this.previousSlide()}"></div>
             </div>
         `
     }
