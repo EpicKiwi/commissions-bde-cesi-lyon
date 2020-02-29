@@ -62,7 +62,7 @@ class TooltipComponent extends LitElement {
                 left: 0;
                 top: 0;
                 transform: translateY(-100%);
-                z-index: 1000;
+                z-index: 100;
                 width: 100%;
             }
             
@@ -92,7 +92,7 @@ class TooltipComponent extends LitElement {
                 
                 position: absolute;
                 bottom: -5px;
-                z-index: 1001;
+                z-index: 101;
             }
             
             .content.left .tooltip-content::after {
