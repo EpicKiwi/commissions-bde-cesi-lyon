@@ -121,6 +121,9 @@ class Commission(RulesModel):
     def has_add_event_permission(self, request):
         return self.has_change_permission(request)
 
+    def get_tags_names(self):
+        return list(map(lambda x: x.name, self.tags.all()))
+
     class Meta:
 
         rules_permissions = {
@@ -202,6 +205,9 @@ class Event(models.Model):
 
     def has_change_event_permission(self, request):
         return self.commission.has_change_permission(request)
+
+    def get_commission_name(self):
+        return self.commission.name
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)

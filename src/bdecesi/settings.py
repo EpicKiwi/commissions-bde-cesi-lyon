@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'webpack_loader',
     'shortener',
-    'qr_code'
+    'qr_code',
+    'django_elasticsearch_dsl'
 ]
 
 MIDDLEWARE = [
@@ -233,3 +234,18 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.FormParser',
     ]
 }
+
+# ------ ElasticSearch ------ #
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': os.getenv("ELASTIC_HOST")
+    },
+}
+
+if os.getenv("DB_ENVIRONMENT", "production") == "development":
+    ELASTICSEARCH_DSL = {
+        'default': {
+            'hosts': 'localhost:9200'
+        },
+    }
