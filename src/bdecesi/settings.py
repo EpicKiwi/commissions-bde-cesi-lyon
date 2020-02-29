@@ -206,7 +206,7 @@ ADMINS = (("EpicKiwi", "me@epickiwi.fr"),)
 
 # ------ EMAIL ------#
 
-EMAIL_HOST = "smtp.office365.com"
+EMAIL_HOST = os.getenv("EMAIL_HOST")
 EMAIL_PORT = 587
 EMAIL_SUBJECT_PREFIX = "[BDE Cesi Lyon]"
 EMAIL_USE_TLS = True
