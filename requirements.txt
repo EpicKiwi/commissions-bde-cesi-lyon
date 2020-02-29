@@ -12,3 +12,4 @@ django-webpack-loader
 django-qr-code
 rules
 pyyaml
+uritemplate
