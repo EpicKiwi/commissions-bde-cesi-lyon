@@ -107,6 +107,7 @@ def show_page(request, path="/"):
         elasticDocument = DocumentationDocument(meta={"id": request_path})
         elasticDocument.title = title
         elasticDocument.content = textContent
+        elasticDocument.path = request_path
         elasticDocument.save()
 
     return render(request, "show_documentation_page.html", {

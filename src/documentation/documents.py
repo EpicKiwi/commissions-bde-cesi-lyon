@@ -6,6 +6,7 @@ class DocumentationDocument(Document):
 
     title = Text()
     content = Text()
+    url = Text()
 
     class Index:
         name = "documentations"
