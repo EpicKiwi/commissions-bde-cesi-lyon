@@ -115,6 +115,8 @@ services:
       - overlay
     environment:
       - discovery.type=single-node
+    volumes:
+      - elasticsearch-persistant:/usr/share/elasticsearch/data
 
 volumes:
   user-media:
@@ -122,6 +124,7 @@ volumes:
   analytics-db-content:
   analytics-content:
   static-files:
+  elasticsearch-persistant:
 
 networks:
   overlay:
