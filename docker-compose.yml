@@ -115,9 +115,11 @@ services:
       - overlay
     environment:
       - discovery.type=single-node
-      - http.cors.enabled=true
-      - http.cors.allow-origin=*
-      - network.host=_eth0_
+      - ES_JAVA_OPTS="-Xmx256m -Xms256m"
+      - xpack.security.enabled="false"
+      - xpack.monitoring.enabled="false"
+      - xpack.graph.enabled="false"
+      - xpack.watcher.enabled="false"
     volumes:
       - elasticsearch-persistant:/usr/share/elasticsearch/data
 
