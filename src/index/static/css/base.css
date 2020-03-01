@@ -4,6 +4,10 @@ body {
     font-size: 17px;
 }
 
+body.block-scroll {
+    overflow: hidden;
+}
+
 .main-aside {
     position: fixed;
     width: 250px;

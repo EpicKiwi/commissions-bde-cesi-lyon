@@ -37,6 +37,7 @@
     "core-js": "^2.5.7",
     "delay": "^4.3.0",
     "lit-element": "^2.2.1",
+    "lodash.debounce": "^4.0.8",
     "simplemde": "^1.11.2"
   }
 }

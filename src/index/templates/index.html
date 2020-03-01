@@ -7,14 +7,9 @@
 {% block head %}
     <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static "css/index.css" %}">
-    <script src="{% static "components/card.js" %}"></script>
-    <script src="{% static "components/emoji.js" %}"></script>
-    <script src="{% static "components/tag.js" %}"></script>
-    <script src="{% static "components/commission-card.js" %}"></script>
-    <script src="{% static "components/multiword.js" %}"></script>
     <script src="{% static "components/event-card.js" %}"></script>
+    <script src="{% static "components/multiword.js" %}"></script>
     <script src="{% static "components/shelf.js" %}"></script>
-    <script src="{% static "components/autoresize.js" %}"></script>
     <script src="{% static "components/timeline.js" %}"></script>
     {% render_bundle 'index' %}
 {% endblock %}
@@ -96,14 +91,17 @@
         </bde-parallax-carousel-slide>
     </bde-parallax-carousel>
 
+    <div class="search">
+        <div class="searchbox">
+            <bde-fake-search searchbox="#main-search">Chercher partout...</bde-fake-search>
+        </div>
+    </div>
+
     {% if quick_links %}
     <ul class="quick-link-list">
         {% for link in quick_links %}
-            <li class="quick-link {{ link.style }}">
-                <a href="{{ link.url }}">
-                    {% if link.icon %}<bde-icon icon="{{ link.icon }}"></bde-icon>{% endif %}
-                    <span class="text">{{ link.text }}</span>
-                </a>
+            <li class="quick-link">
+                <bde-quicklink style="{{ link.style }}" icon="{{ link.icon }}" href="{{ link.url }}">{{ link.text }}</bde-quicklink>
             </li>
         {% endfor %}
     </ul>

@@ -77,6 +77,22 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 		]
 
 
+class ExtendedUserSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = User
+		fields = [
+			"url",
+			"id",
+			"email",
+			"first_name",
+			"last_name",
+			"profile_picture",
+			"is_active",
+			"support_member",
+			"is_viacesi"
+		]
+
+
 class SocialQuesterSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = CommissionSocialQuester
@@ -111,6 +127,9 @@ class UploadCreateSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class EventSerializer(serializers.HyperlinkedModelSerializer):
+
+	commission = CommissionSerializer()
+
 	class Meta:
 		model = Event
 		fields = [
@@ -161,7 +180,7 @@ class MixedSearchSerializer(serializers.Serializer):
 		child=CommissionSerializer()
 	)
 	users = serializers.ListField(
-		child=UserSerializer()
+		child=ExtendedUserSerializer()
 	)
 	events = serializers.ListField(
 		child=EventSerializer()

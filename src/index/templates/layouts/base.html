@@ -1,4 +1,5 @@
 {% load static %}
+{% load render_bundle from webpack_loader %}
 
 <!DOCTYPE html>
 <html lang="fr-fr">
@@ -18,6 +19,7 @@
     <link rel="stylesheet" href="{% static "css/reset.css" %}"/>
     <link rel="stylesheet" href="{% static "css/base.css" %}"/>
     <link rel="stylesheet" href="{% static "css/framework.css" %}"/>
+    {% render_bundle 'all-pages' %}
 
     <script src="{% static "components/notifications.js" %}"></script>
     <script src="{% static "components/icon.js" %}"></script>
@@ -26,6 +28,11 @@
     <script src="{% static "components/class-switcher.js" %}"></script>
     <script src="{% static "components/mobile-header.js" %}"></script>
     <script src="{% static "components/compact-commission.js" %}"></script>
+
+    <script src="{% static "components/card.js" %}"></script>
+    <script src="{% static "components/emoji.js" %}"></script>
+    <script src="{% static "components/tag.js" %}"></script>
+    <script src="{% static "components/commission-card.js" %}"></script>
     {% block head %}{% endblock %}
 
     {% block opengraph %}
@@ -56,6 +63,8 @@
         {% endif %}
 </head>
 <body>
+
+<bde-search-box id="main-search"></bde-search-box>
 
 <bde-mobile-header aside-target=".main-aside" class="page-header">{% block header %}{% endblock %}</bde-mobile-header>
 
@@ -100,6 +109,7 @@
             <li><a href="/commissions/create" class="clickable rainbow{% if active_commission_creation %} active{% endif %}">Créer une commission</a></li>
         {% endif %}
         <li><a href="/guide" class="clickable{% if active_guide %} active{% endif %}">Guide de la Vie Asso</a></li>
+        <li class="clickable"><bde-fake-search searchbox="#main-search" explicit ></bde-fake-search></li>
     </ul>
 
     {% if userCommissions %}
