@@ -148,6 +148,27 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
 		]
 
 
+class UnauthenticatedEventSerializer(serializers.HyperlinkedModelSerializer):
+
+	commission = CommissionSerializer()
+
+	class Meta:
+		model = Event
+		fields = [
+			"url",
+			"id",
+			"name",
+			"slug",
+			"description",
+			"banner",
+			"commission",
+			"creation_date",
+			"update_date",
+			"event_date_start",
+			"event_date_end"
+		]
+
+
 class QuicklinkSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = QuickLink
@@ -184,6 +205,24 @@ class MixedSearchSerializer(serializers.Serializer):
 	)
 	events = serializers.ListField(
 		child=EventSerializer()
+	)
+	quicklinks = serializers.ListField(
+		child=QuicklinkSerializer()
+	)
+
+
+class UnauthenticatedMixedSearchSerializer(serializers.Serializer):
+	documentations = serializers.ListField(
+		child=DocumentationSerializer()
+	)
+	commissions = serializers.ListField(
+		child=CommissionSerializer()
+	)
+	users = serializers.ListField(
+		child=ExtendedUserSerializer()
+	)
+	events = serializers.ListField(
+		child=UnauthenticatedEventSerializer()
 	)
 	quicklinks = serializers.ListField(
 		child=QuicklinkSerializer()

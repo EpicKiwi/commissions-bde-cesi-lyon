@@ -9,7 +9,8 @@ from rest_framework.views import APIView
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from api.serializers import UserSerializer, CommissionSerializer, PostSerializer, SocialQuesterSerializer, \
-    PostImageSerializer, UploadSerializer, UploadCreateSerializer, MixedSearchSerializer, EventSerializer
+    PostImageSerializer, UploadSerializer, UploadCreateSerializer, MixedSearchSerializer, EventSerializer, \
+    UnauthenticatedMixedSearchSerializer
 from commissions.documents import CommissionDocument, EventDocument
 from commissions.models import Commission, Post, CommissionSocialQuester, PostImage, Event
 from documentation.documents import DocumentationDocument
@@ -209,16 +210,19 @@ class MixedSearch(APIView):
                                                                        "description",
                                                                        "organization_dependant",
                                                                        "tags^3"
-                                                                   ]))
+                                                                   ])).to_queryset()
 
-        users = UserDocument.search().query(MultiMatch(query=query,
-                                                       tie_breaker=0.3,
-                                                       fuzziness=1,
-                                                       fields=[
-                                                           "email",
-                                                           "first_name^2",
-                                                           "last_name^2"
-                                                       ]))
+        if not request.user.is_authenticated:
+            users = []
+        else :
+            users = UserDocument.search().query(MultiMatch(query=query,
+                                                           tie_breaker=0.3,
+                                                           fuzziness=1,
+                                                           fields=[
+                                                               "email",
+                                                               "first_name^2",
+                                                               "last_name^2"
+                                                           ])).to_queryset()
 
         events = EventDocument.search().query(MultiMatch(query=query,
                                                          tie_breaker=0.3,
@@ -228,7 +232,7 @@ class MixedSearch(APIView):
                                                              "location^2",
                                                              "description",
                                                              "commission"
-                                                         ]))
+                                                         ])).to_queryset()
 
         quicklinks = QuickLinkDocument.search().query(MultiMatch(query=query,
                                                                  tie_breaker=0.3,
@@ -236,7 +240,7 @@ class MixedSearch(APIView):
                                                                  fields=[
                                                                      "text^2",
                                                                      "url",
-                                                                 ]))
+                                                                 ])).to_queryset()
 
         documentation = DocumentationDocument.search().query(MultiMatch(query=query,
                                                                  tie_breaker=0.3,
@@ -247,12 +251,21 @@ class MixedSearch(APIView):
                                                                      "path"
                                                                  ])).execute()
 
-        serializer = MixedSearchSerializer({
-            "commissions": commissions.to_queryset(),
-            "documentations": documentation.hits,
-            "users": users.to_queryset(),
-            "events": events.to_queryset(),
-            "quicklinks": quicklinks.to_queryset(),
-        }, context={'request': request})
+        if not request.user.is_authenticated:
+            serializer = UnauthenticatedMixedSearchSerializer({
+                "commissions": commissions,
+                "documentations": documentation.hits,
+                "users": users,
+                "events": events,
+                "quicklinks": quicklinks,
+            }, context={'request': request})
+        else:
+            serializer = MixedSearchSerializer({
+                "commissions": commissions,
+                "documentations": documentation.hits,
+                "users": users,
+                "events": events,
+                "quicklinks": quicklinks,
+            }, context={'request': request})
 
         return Response(serializer.data)
