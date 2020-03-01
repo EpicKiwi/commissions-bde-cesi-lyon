@@ -82,6 +82,7 @@ class SearchBoxComponent extends LitElement {
 
     clearField(){
         this.search = "";
+        this.results = undefined;
     }
 
     render() {
@@ -91,6 +92,7 @@ class SearchBoxComponent extends LitElement {
         let documentationHtml = []
         let quicklinkHtml = []
         let eventHtml = []
+        let emptyResult = false
 
         if(this.results) {
 
@@ -135,6 +137,9 @@ class SearchBoxComponent extends LitElement {
                     <span class="documentation-path">${doc.url}</span>
                 </a>
             `)
+
+            emptyResult = Object.values(this.results).reduce((acc,el) => acc+el.length, 0) == 0
+            console.log(emptyResult)
         }
 
         return html`
@@ -282,6 +287,24 @@ class SearchBoxComponent extends LitElement {
             display: none;
         }
         
+        .empty-results {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            font-size: 20px;
+            text-align: center;
+            opacity: 0.5;
+        }
+        
+        .empty-results.hidden {
+            display: none;
+        }
+        
+        .empty-results .icon {
+            font-size: 50px;
+        }
+        
         </style>
         <div class="wrapper ${!this.show ? "hidden" : ""}">
             <div class="search-form">
@@ -306,6 +329,10 @@ class SearchBoxComponent extends LitElement {
                     <p>Appuie deux fois sur MAJ pour ouvrir la recherche</p>
                 </div>
                 <div class="search-results ${this.search == "" ? "hidden" : ""}">
+                    <div class="empty-results ${emptyResult ? "" : "hidden"}">
+                        <div class="icon"><bde-icon icon="mdi-magnify"></bde-icon></div>
+                        <p>Désolé... Aucun résultat</p>
+                    </div>
                     ${quicklinkHtml.length > 0 ? html`<div class="row-results reduced-results">
                         ${quicklinkHtml}
                     </div>` : ""}
