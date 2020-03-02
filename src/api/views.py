@@ -251,7 +251,7 @@ class MixedSearch(APIView):
                                                                      "title^3",
                                                                      "content^2",
                                                                      "path"
-                                                                 ])).execute()
+                                                                 ])).execute().hits
         except NotFoundError:
             documentation = []
 
@@ -266,7 +266,7 @@ class MixedSearch(APIView):
         else:
             serializer = MixedSearchSerializer({
                 "commissions": commissions,
-                "documentations": documentation.hits,
+                "documentations": documentation,
                 "users": users,
                 "events": events,
                 "quicklinks": quicklinks,
