@@ -216,7 +216,7 @@ class MixedSearch(APIView):
             ),
             negative=Match(is_active=False),
             negative_boost=0.1
-        )).to_queryset()
+        )).exclude(Match(is_organization=True)).to_queryset()
 
         if not request.user.is_authenticated:
             users = []
