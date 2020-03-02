@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Site de gestion de la vie asso du BDE CESI Lyon",
   "scripts": {
-    "dev": "concurrently --kill-others \"cd src && VERSION=$(./get_version.sh) python3 manage.py runserver\" \"webpack-cli --watch\"",
+    "dev": "concurrently --kill-others \"cd src && VERSION=$(./get_version.sh) ELASTIC_HOST=localhost:9200 python3 manage.py runserver\" \"webpack-cli --watch\"",
     "build": "webpack-cli",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

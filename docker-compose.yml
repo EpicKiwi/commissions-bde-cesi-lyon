@@ -115,10 +115,10 @@ services:
       - overlay
     environment:
       - discovery.type=single-node
-      - xpack.security.enabled="false"
-      - xpack.monitoring.enabled="false"
-      - xpack.graph.enabled="false"
-      - xpack.watcher.enabled="false"
+      - xpack.security.enabled=false
+      - xpack.monitoring.enabled=false
+      - xpack.graph.enabled=false
+      - xpack.watcher.enabled=false
     volumes:
       - elasticsearch-persistant:/usr/share/elasticsearch/data
 

@@ -242,10 +242,3 @@ ELASTICSEARCH_DSL = {
         'hosts': os.getenv("ELASTIC_HOST")
     },
 }
-
-if os.getenv("DB_ENVIRONMENT", "production") == "development":
-    ELASTICSEARCH_DSL = {
-        'default': {
-            'hosts': 'localhost:9200'
-        },
-    }
