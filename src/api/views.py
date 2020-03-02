@@ -1,10 +1,9 @@
+from django.utils import timezone
+
 from elasticsearch import NotFoundError
-from elasticsearch_dsl.query import MultiMatch
+from elasticsearch_dsl.query import MultiMatch, Match, Boosting, Range, FunctionScore
 from rest_framework import viewsets, status
-from rest_framework.decorators import api_view, schema, action
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions, DjangoObjectPermissions
-from rest_framework.relations import HyperlinkedRelatedField
-from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from url_filter.integrations.drf import DjangoFilterBackend
@@ -202,53 +201,76 @@ class MixedSearch(APIView):
 
         query = request.GET['q']
 
-        commissions = CommissionDocument.search().query(MultiMatch(query=query,
-                                                                   tie_breaker=0.3,
-                                                                   fuzziness=1,
-                                                                   fields=[
-                                                                       "name^3",
-                                                                       "short_description^2",
-                                                                       "description",
-                                                                       "organization_dependant",
-                                                                       "tags^3"
-                                                                   ])).to_queryset()
+        commissions = CommissionDocument.search().query(Boosting(
+            positive=MultiMatch(
+                       query=query,
+                       tie_breaker=0.3,
+                       fuzziness=1,
+                       fields=[
+                           "name^3",
+                           "short_description^2",
+                           "description",
+                           "organization_dependant",
+                           "tags^3"]
+            ),
+            negative=Match(is_active=False),
+            negative_boost=0.1
+        )).to_queryset()
 
         if not request.user.is_authenticated:
             users = []
         else :
-            users = UserDocument.search().query(MultiMatch(query=query,
-                                                           tie_breaker=0.3,
-                                                           fuzziness=1,
-                                                           fields=[
-                                                               "email",
-                                                               "first_name^2",
-                                                               "last_name^2"
-                                                           ])).to_queryset()
+            users = UserDocument.search().query(
+                MultiMatch(query=query,
+                           tie_breaker=0.3,
+                           fuzziness=1,
+                           fields=[
+                               "email",
+                               "first_name^2",
+                               "last_name^2"
+                           ])
+            ).exclude(Match(is_active=False)).to_queryset()
 
-        events = EventDocument.search().query(MultiMatch(query=query,
-                                                         tie_breaker=0.3,
-                                                         fuzziness=1,
-                                                         fields=[
-                                                             "name^2",
-                                                             "location^2",
-                                                             "description",
-                                                             "commission"
-                                                         ])).to_queryset()
+        events = EventDocument.search().query(
+            Boosting(
+                positive=MultiMatch(
+                            query=query,
+                            tie_breaker=0.3,
+                            fuzziness=1,
+                            fields=[
+                             "name^2",
+                             "location^2",
+                             "description",
+                             "commission"
+                            ]),
+                negative=Range(event_date_end={"lte": timezone.now()}),
+                negative_boost=0.1
+            )
+        ).to_queryset()
 
-        quicklinks = QuickLinkDocument.search().query(MultiMatch(query=query,
-                                                                 tie_breaker=0.3,
-                                                                 fuzziness=1,
-                                                                 fields=[
-                                                                     "text^2",
-                                                                     "url",
-                                                                 ])).to_queryset()
+        quicklinks = QuickLinkDocument.search().query(
+            FunctionScore(
+                query=MultiMatch(
+                    query=query,
+                    tie_breaker=0.3,
+                    fuzziness=1,
+                    fields=[
+                     "text^2",
+                     "url",
+                    ]),
+                field_value_factor={
+                    "field": "weight",
+                    "factor": 1.2,
+                }
+            )
+        ).to_queryset()
 
         try:
             documentation = DocumentationDocument.search().query(MultiMatch(query=query,
                                                                  tie_breaker=0.3,
                                                                  fuzziness=1,
                                                                  fields=[
-                                                                     "title^3",
+                                                                     "title^4",
                                                                      "content^2",
                                                                      "path"
                                                                  ])).execute().hits
