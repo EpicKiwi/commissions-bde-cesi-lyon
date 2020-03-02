@@ -52,9 +52,13 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'webpack_loader',
     'shortener',
-    'qr_code',
-    'django_elasticsearch_dsl'
+    'qr_code'
 ]
+
+if os.getenv("ELASTIC_HOST", None) is not None:
+    INSTALLED_APPS += ['django_elasticsearch_dsl']
+else:
+    print("Starting without Elasticsearch support")
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
