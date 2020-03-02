@@ -14,5 +14,6 @@ class QuickLink(models.Model):
 	icon = models.CharField(max_length=255, default=None, blank=True, null=True, help_text="Icon du lien (format: mdi:[icon])")
 
 	page = models.CharField(max_length=50, choices=[
-		("index", "Page d'accueil")
+		("index", "Page d'accueil"),
+		("search", "Recherche uniquement")
 	], default="index", help_text="Page d'affichage du lien")
