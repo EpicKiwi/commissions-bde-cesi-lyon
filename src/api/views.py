@@ -258,7 +258,7 @@ class MixedSearch(APIView):
         if not request.user.is_authenticated:
             serializer = UnauthenticatedMixedSearchSerializer({
                 "commissions": commissions,
-                "documentations": documentation.hits,
+                "documentations": documentation,
                 "users": users,
                 "events": events,
                 "quicklinks": quicklinks,
