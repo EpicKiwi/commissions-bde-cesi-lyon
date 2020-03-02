@@ -1,16 +1,34 @@
 import {LitElement, html} from "lit-element";
+import "@index/components/tooltip"
 
 class QuickLinkComponent extends LitElement {
 
     static get properties(){return {
         href: {type: String},
         icon: {type: String},
-        style: {type: String}
+        style: {type: String},
+        description: {type: String}
     }}
 
     render() {
 
         let icon = this.icon ? html`<bde-icon icon="${this.icon}"></bde-icon>` : ""
+
+        let content = html`
+            <div class="wrapper ${this.style}">
+                <a href="${this.href}">
+                    ${icon}
+                    <span class="text"><slot></slot></span>
+                </a>
+            </div>`
+
+        if(this.description){
+            content = html`
+            <bde-tooltip content="${this.description}">
+                ${content}
+            </bde-tooltip>
+            `
+        }
 
         return html`
         <style>
@@ -52,12 +70,7 @@ class QuickLinkComponent extends LitElement {
             text-decoration: inherit;
         }
         </style>
-        <div class="wrapper ${this.style}">
-            <a href="${this.href}">
-                ${icon}
-                <span class="text"><slot></slot></span>
-            </a>
-        </div>
+        ${content}
         `
     }
 

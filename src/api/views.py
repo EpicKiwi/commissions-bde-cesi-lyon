@@ -1,5 +1,6 @@
-from django.utils import timezone
+import datetime
 
+from django.utils import timezone
 from elasticsearch import NotFoundError
 from elasticsearch_dsl.query import MultiMatch, Match, Boosting, Range, FunctionScore
 from rest_framework import viewsets, status
@@ -243,7 +244,7 @@ class MixedSearch(APIView):
                              "description",
                              "commission"
                             ]),
-                negative=Range(event_date_end={"lte": timezone.now()}),
+                negative=Range(event_date_end={"lte": datetime.datetime.now()}),
                 negative_boost=0.1
             )
         ).to_queryset()
@@ -255,7 +256,8 @@ class MixedSearch(APIView):
                     tie_breaker=0.3,
                     fuzziness=1,
                     fields=[
-                     "text^2",
+                     "text^3",
+                     "description^2",
                      "url",
                     ]),
                 field_value_factor={
@@ -263,7 +265,7 @@ class MixedSearch(APIView):
                     "factor": 1.2,
                 }
             )
-        ).to_queryset()
+        ).exclude(Range(expiration={"lte": timezone.now()})).to_queryset()
 
         try:
             documentation = DocumentationDocument.search().query(MultiMatch(query=query,

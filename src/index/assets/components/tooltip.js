@@ -13,13 +13,23 @@ class TooltipComponent extends LitElement {
         content: {type: String},
         anchor: {type: String},
         show: {type: Boolean},
-        animateKeep: {type: Boolean}
+        forceHide: {type: Boolean},
+        animateKeep: {type: Boolean},
+        flavor: {type: String}
     }}
 
     connectedCallback() {
         super.connectedCallback()
-        if(this.show)
-            setTimeout(() => this.show(), 500)
+        if(this.show) {
+            this.show = false
+            this.forceHide = true
+            setTimeout( () => {
+                this.forceHide = false
+                this.show = true
+            }, 500)
+        }
+
+        window.addEventListener("resize", () => this.show ? this.requestUpdate() : null)
     }
 
     updated(changedProperties) {
@@ -43,38 +53,71 @@ class TooltipComponent extends LitElement {
         await animate.animate(tooltipEl,"leave")
     }
 
+    get XPos(){
+        let rect = this.getBoundingClientRect()
+        switch(this.correctedAnchor){
+            case "center":
+                return rect.left + rect.width/2
+            case "left":
+                return rect.left
+            case "right":
+                return rect.left+rect.width
+        }
+    }
+
+    get YPos(){
+        let rect = this.getBoundingClientRect()
+        return rect.top + window.pageYOffset
+    }
+
+    get correctedAnchor(){
+        return Object.values(ANCHORS).indexOf(this.anchor) === -1 ? "center" : this.anchor
+    }
+
     render() {
-        let anchorclass = Object.values(ANCHORS).indexOf(this.anchor) === -1 ? "center" : this.anchor
+        let anchorclass = this.correctedAnchor
 
         return html`
         <style>
             :host {
                 display: block;
             }
-        
-            .content {
-                position: relative;
-            }
             
             .tooltip {
                 position: absolute;
                 padding-bottom: 10px;
-                left: 0;
-                top: 0;
-                transform: translateY(-100%);
-                z-index: 100;
-                width: 100%;
+                transform: translateY(-100%) translateX(-50%);
+                z-index: 1500;
+                max-width: 300px;
+                opacity: 0.9;
+            }
+            
+            .content.left .tooltip {
+                transform: translateY(-100%) translateX(0);
+            }
+            
+            .content.right .tooltip {
+                transform: translateY(-100%) translateX(-100%);
             }
             
             .tooltip-content {
                 display: inline-block;
-                padding: 5px;
-                background: var(--primary-color);
-                color: var(--on-primary-color);
+                padding: 10px;
+                background: #383838;
+                color: white;
                 border-radius: 5px;
                 position: relative;
                 cursor: default;
-                text-align: left;
+            }
+            
+            .primary .tooltip-content {
+                background: var(--primary-color);
+                color: var(--on-primary-color);
+            }
+            
+            .secondary .tooltip-content {
+                background: var(--secondary-color);
+                color: var(--on-secondary-color);
             }
             
             .tooltip-content.hidden {
@@ -86,13 +129,21 @@ class TooltipComponent extends LitElement {
                 display : inline-block;
                 height : 0;
                 width : 0;
-                border-top : 5px solid var(--primary-color);
+                border-top : 5px solid #383838;
                 border-right : 5px solid transparent;
                 border-left : 5px solid transparent;
                 
                 position: absolute;
                 bottom: -5px;
                 z-index: 101;
+            }
+            
+            .primary .tooltip-content::after {
+                border-top : 5px solid var(--primary-color);
+            }
+            
+            .secondary .tooltip-content::after {
+                border-top : 5px solid var(--secondary-color);
             }
             
             .content.left .tooltip-content::after {
@@ -147,9 +198,9 @@ class TooltipComponent extends LitElement {
             }
             
         </style>
-        <div class="content ${anchorclass}" @mouseenter="${() => this.show = true}" @mouseleave="${() => this.show = false}">
-            <div class="tooltip">
-                <div class="tooltip-content ${!this.show && !this.animateKeep ? "hidden": ""}" id="tooltip" @click="${() => this.show = false}">
+        <div class="content ${anchorclass} ${this.flavor ? this.flavor : ""}" @mouseenter="${() => this.show = true}" @mouseleave="${() => this.show = false}">
+            <div class="tooltip" style="left: ${this.XPos}px; top: ${this.YPos}px">
+                <div class="tooltip-content ${(!this.show && !this.animateKeep) || this.forceHide ? "hidden" : ""}" id="tooltip" @click="${() => this.show = false}">
                     ${this.content}
                 </div>
             </div>

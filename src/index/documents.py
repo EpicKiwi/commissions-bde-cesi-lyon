@@ -20,5 +20,7 @@ class QuickLinkDocument(Document):
             "text",
             "url",
             "weight",
-            "page"
+            "page",
+            "expiration",
+            "description"
         ]

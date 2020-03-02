@@ -17,3 +17,7 @@ class QuickLink(models.Model):
 		("index", "Page d'accueil"),
 		("search", "Recherche uniquement")
 	], default="index", help_text="Page d'affichage du lien")
+
+	expiration = models.DateTimeField(blank=True, null=True, help_text="Le lien rapide peut expirer apres une date définie, dans le cas d'un lien d'une opération ponctuel")
+
+	description = models.CharField(blank=True, null=True, max_length=255, help_text="Courte description du lien et l'URL qu'il pointe")

@@ -1,6 +1,7 @@
 import random
 
 from django.shortcuts import render
+from django.utils import timezone
 
 from commissions.models import Commission, Post
 from commissions.models import Event
@@ -22,7 +23,7 @@ def index(request):
 
     past_events = Event.objects.filter(event_date_end__lt=datetime.datetime.now()).order_by("-event_date_start")[:50]
 
-    quick_links = QuickLink.objects.filter(page="index").order_by("-weight")
+    quick_links = QuickLink.objects.filter(page="index").exclude(expiration__lte=timezone.now()).order_by("-weight")
 
     max_posts_date = datetime.datetime.now() - datetime.timedelta(days=30)
 

@@ -2,16 +2,16 @@
 
 <bde-event-card
 	
-	event-name="{{event.name}}"
+	eventName="{{event.name}}"
 	
     {% if event.banner %}
-        banner-src="/media/{{event.banner}}"
+        bannerSrc="/media/{{event.banner}}"
     {% elif event.commission.banner %}
-        banner-src="/media/{{event.commission.banner}}"
+        bannerSrc="/media/{{event.commission.banner}}"
     {% endif %}
 	
-	event-start="{{event.event_date_start | date:"c" }}"
-	event-end="{{event.event_date_end | date:"c" }}"
+	eventStart="{{event.event_date_start | date:"c" }}"
+	eventEnd="{{event.event_date_end | date:"c" }}"
 
 	>
 	

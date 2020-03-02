@@ -101,7 +101,12 @@
     <ul class="quick-link-list">
         {% for link in quick_links %}
             <li class="quick-link">
-                <bde-quicklink style="{{ link.style }}" icon="{{ link.icon }}" href="{{ link.url }}">{{ link.text }}</bde-quicklink>
+                <bde-quicklink
+                        style="{{ link.style }}"
+                        {% if link.description %}description="{{ link.description }}"{% endif %}
+                        icon="{{ link.icon }}"
+                        href="{{ link.url }}"
+                >{{ link.text }}</bde-quicklink>
             </li>
         {% endfor %}
     </ul>
