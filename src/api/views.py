@@ -1,3 +1,4 @@
+from elasticsearch import NotFoundError
 from elasticsearch_dsl.query import MultiMatch
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view, schema, action
@@ -242,7 +243,8 @@ class MixedSearch(APIView):
                                                                      "url",
                                                                  ])).to_queryset()
 
-        documentation = DocumentationDocument.search().query(MultiMatch(query=query,
+        try:
+            documentation = DocumentationDocument.search().query(MultiMatch(query=query,
                                                                  tie_breaker=0.3,
                                                                  fuzziness=1,
                                                                  fields=[
@@ -250,6 +252,8 @@ class MixedSearch(APIView):
                                                                      "content^2",
                                                                      "path"
                                                                  ])).execute()
+        except NotFoundError:
+            documentation = []
 
         if not request.user.is_authenticated:
             serializer = UnauthenticatedMixedSearchSerializer({
