@@ -76,6 +76,10 @@
         </a>
     </header>
 
+    {# Rcherche #}
+
+    <div><bde-fake-search searchbox="#main-search" explicit ></bde-fake-search></div>
+
     {# Authentification #}
 
     <div class="separator"></div>
@@ -109,7 +113,6 @@
             <li><a href="/commissions/create" class="clickable rainbow{% if active_commission_creation %} active{% endif %}">Créer une commission</a></li>
         {% endif %}
         <li><a href="/guide" class="clickable{% if active_guide %} active{% endif %}">Guide de la Vie Asso</a></li>
-        <li class="clickable"><bde-fake-search searchbox="#main-search" explicit ></bde-fake-search></li>
     </ul>
 
     {% if userCommissions %}
