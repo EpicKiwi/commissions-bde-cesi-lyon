@@ -100,16 +100,16 @@ class SearchBoxComponent extends LitElement {
                 <bde-quicklink icon="${ql.icon}" style="${ql.style}" href="${ql.url}" >${ql.text}</bde-quicklink>
             `)
 
-            eventHtml = this.results.events.map(eve => html`
-                <a href="/commissions/${eve.commission.slug}/event-${eve.slug}" style="display: block; color: inherit; text-decoration: inherit">
+            eventHtml = this.results.events.map(eve => html`<a
+                href="/commissions/${eve.commission.slug}/event-${eve.slug}"
+                style="color: inherit; text-decoration: inherit; display: inline-block">
                     <bde-event-card eventName="${eve.name}" bannerSrc="${eve.banner || eve.commission.banner}" eventStart="${eve.event_date_start}" eventEnd="${eve.event_date_end}" style="width: 300px" >
                         <span slot="location">${eve.location}</span>
                         <div slot="commission">
                             <bde-compact-commission logo-src="${eve.commission.logo}">${eve.commission.name}</bde-compact-commission>
                         </div>
                     </bde-event-card>
-                </a>
-            `)
+                </a>`)
 
             usersHtml = this.results.users.map(usr => {
                 if(usr.profile_picture) {
@@ -120,26 +120,21 @@ class SearchBoxComponent extends LitElement {
             })
 
             commissionsHtml = this.results.commissions.map( com => {
-                return html`
-                    <bde-commission-card
+                return html`<bde-commission-card
                             banner-src="${com.banner}"
                             logo-src="${com.logo}"
                             commission-name="${com.name}"
                             href="/commissions/${com.slug}"
                             organization="${com.organization_dependant}"
-                        >${com.short_description}</bde-commission-card>
-                `
+                        >${com.short_description}</bde-commission-card>`
             })
 
-            documentationHtml = this.results.documentations.map( doc => html`
-                <a class="result-link documentation" href="${doc.url}">
+            documentationHtml = this.results.documentations.map( doc => html`<a class="result-link documentation" href="${doc.url}">
                     <h3 class="icon"><bde-icon icon="fa-solid:book"></bde-icon> ${doc.title}</h3>
                     <span class="documentation-path">${doc.url}</span>
-                </a>
-            `)
+                </a>`)
 
             emptyResult = Object.values(this.results).reduce((acc,el) => acc+el.length, 0) == 0
-            console.log(emptyResult)
         }
 
         return html`
@@ -232,22 +227,23 @@ class SearchBoxComponent extends LitElement {
         }
         
         .row-results {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            align-items: center;
+            display: block;
+            white-space: nowrap;
+            vertical-align: center;
             overflow: auto;
             padding: 25px 0;
         }
         
-        .row-results::before, .row-results::after {
-            content: "";
-            min-width: 25px;
-            height: 100%;
+        .row-results > :first-child {
+            margin-left: 25px;
+        }
+        
+        .row-results > :last-child {
+            margin-right: 25px;
         }
         
         .row-results > * {
-            width: auto;
+            display: inline-block;
             margin-right: 25px;
         }
         
@@ -333,21 +329,11 @@ class SearchBoxComponent extends LitElement {
                         <div class="icon"><bde-icon icon="mdi-magnify"></bde-icon></div>
                         <p>Désolé... Aucun résultat</p>
                     </div>
-                    ${quicklinkHtml.length > 0 ? html`<div class="row-results reduced-results">
-                        ${quicklinkHtml}
-                    </div>` : ""}
-                    ${commissionsHtml.length > 0 ? html`<div class="row-results">
-                        ${commissionsHtml}
-                    </div>` : ""}
-                    ${eventHtml.length > 0 ? html`<div class="row-results">
-                        ${eventHtml}
-                    </div>` : ""}
-                    ${usersHtml.length > 0 ? html`<div class="row-results">
-                        ${usersHtml}
-                    </div>` : ""}
-                    ${documentationHtml.length > 0 ? html`<div class="list-results">
-                        ${documentationHtml}
-                    </div>` : ""}
+                    ${quicklinkHtml.length > 0 ? html`<div class="row-results reduced-results">${quicklinkHtml}</div>` : ""}
+                    ${commissionsHtml.length > 0 ? html`<div class="row-results">${commissionsHtml}</div>` : ""}
+                    ${eventHtml.length > 0 ? html`<div class="row-results">${eventHtml}</div>` : ""}
+                    ${usersHtml.length > 0 ? html`<div class="row-results">${usersHtml}</div>` : ""}
+                    ${documentationHtml.length > 0 ? html`<div class="list-results">${documentationHtml}</div>` : ""}
                 </div>
             </div>
         </div>

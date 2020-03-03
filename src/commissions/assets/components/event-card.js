@@ -104,8 +104,11 @@ class EventCard extends LitElement {
 
     .header .info {
         flex: 1;
-
         color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .header .info > * {
+        max-width: 100%;
     }
 
     .header .info .place {
@@ -122,6 +125,7 @@ class EventCard extends LitElement {
     .header .date {
         height: 80px;
         width: 80px;
+        min-width: 80px;
         border-radius: 10px;
         background: rgba(255, 255, 255, 0.6);
         margin-right: 10px;
