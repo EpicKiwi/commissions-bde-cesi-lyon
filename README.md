@@ -31,10 +31,32 @@ python manage.py migrate
 Démarrez le serveur de développement
 
 ```sh-session
-python manage.py runserver
+npm run dev
 ```
 
 Rendez vous sur [localhost:8000](http://localhost:8000)
+
+### Elasticsearch
+
+La recherche s'éfféctue via un serveur Elasticsearch permettant d'indexer les différentes pages.
+Par défaut, la fonctionnalité est désactivée en développement pour éviter de surcharger la station de travail ,de developpement.
+Mais si vous désirez travailler sur le système de recharche, il est nécéssaire.
+
+Demarrez un serveur Elasticsearch sur votre machine avec Docker
+```
+docker run --name elasticsearch -p 9200:9200 -e "discovery.type=single-node" elasticsearch:7.6.0
+```
+
+Créez les indexes et enregistrez les données dans Elastic
+```
+cd src
+ELASTIC_HOST=localhost:9200 python manage.py search_index --rebuild -f
+```
+
+Demarrez le serveur de développement avec la configuration Elastic
+```
+ELASTIC_HOST=localhost:9200 npm run dev
+```
 
 ## Installation de production
 
