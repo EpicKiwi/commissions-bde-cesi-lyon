@@ -227,6 +227,41 @@ bde-shelf {
     margin: 10px;
 }
 
+.index-body {
+    display: flex;
+    flex-direction: row;
+}
+
+.index-body > .body-section {
+    flex: 1;
+    padding-right: 2vw;
+    margin-top: 0;
+}
+
+.index-body > .body-aside {
+    padding: 25px 5vw 75px 2vw;
+}
+
+.index-body > .body-aside > h3 {
+    font-family: var(--title-fonts);
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #696969;
+}
+
+.index-body > .body-aside > bde-commission-card {
+    margin-bottom: 40px;
+}
+
+@media screen and (max-width: 1000px) {
+
+    .index-body > .body-aside {
+        display: none;
+    }
+
+}
+
 @media screen and (max-width: 800px) {
 
     .quick-link-list {
@@ -243,11 +278,6 @@ bde-shelf {
         margin-right: 5vw;
     }
 
-}
-
-.timeline {
-    max-width: 800px;
-    margin: 0 auto;
 }
 
 .search {
