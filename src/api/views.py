@@ -11,11 +11,11 @@ from url_filter.integrations.drf import DjangoFilterBackend
 
 from api.serializers import UserSerializer, CommissionSerializer, PostSerializer, SocialQuesterSerializer, \
     PostImageSerializer, UploadSerializer, UploadCreateSerializer, MixedSearchSerializer, EventSerializer, \
-    UnauthenticatedMixedSearchSerializer
+    UnauthenticatedMixedSearchSerializer, DocumentSerializer
 from commissions.documents import CommissionDocument, EventDocument
 from commissions.models import Commission, Post, CommissionSocialQuester, PostImage, Event
 from documentation.documents import DocumentationDocument
-from documents.models import Upload
+from documents.models import Upload, Document
 from index.documents import QuickLinkDocument
 from users.documents import UserDocument
 from users.models import User
@@ -185,6 +185,25 @@ class UploadViewSet(viewsets.ModelViewSet):
         return Response(full_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
+class DocumentViewSet(viewsets.ModelViewSet):
+    """
+	Permet de rechercher/ajouter/modifier/supprimer les Documents sur le site
+
+	Les documents sont tout les documents administratifs du BDE
+	"""
+    queryset = Document.objects.all()
+    serializer_class = DocumentSerializer
+    permission_classes = [IsAuthenticated, DjangoModelPermissions, DjangoObjectPermissions]
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = [
+        "id",
+        "role",
+        "created_at",
+        "current_version",
+        "file"
+    ]
+
+
 class MixedSearch(APIView):
     """
     Recherche sur l'ensemble du site internet
@@ -204,15 +223,15 @@ class MixedSearch(APIView):
 
         commissions = CommissionDocument.search().query(Boosting(
             positive=MultiMatch(
-                       query=query,
-                       tie_breaker=0.3,
-                       fuzziness=1,
-                       fields=[
-                           "name^3",
-                           "short_description^2",
-                           "description",
-                           "organization_dependant",
-                           "tags^3"]
+                query=query,
+                tie_breaker=0.3,
+                fuzziness=1,
+                fields=[
+                    "name^3",
+                    "short_description^2",
+                    "description",
+                    "organization_dependant",
+                    "tags^3"]
             ),
             negative=Match(is_active=False),
             negative_boost=0.1
@@ -220,7 +239,7 @@ class MixedSearch(APIView):
 
         if not request.user.is_authenticated:
             users = []
-        else :
+        else:
             users = UserDocument.search().query(
                 MultiMatch(query=query,
                            tie_breaker=0.3,
@@ -235,15 +254,15 @@ class MixedSearch(APIView):
         events = EventDocument.search().query(
             Boosting(
                 positive=MultiMatch(
-                            query=query,
-                            tie_breaker=0.3,
-                            fuzziness=1,
-                            fields=[
-                             "name^2",
-                             "location^2",
-                             "description",
-                             "commission"
-                            ]),
+                    query=query,
+                    tie_breaker=0.3,
+                    fuzziness=1,
+                    fields=[
+                        "name^2",
+                        "location^2",
+                        "description",
+                        "commission"
+                    ]),
                 negative=Range(event_date_end={"lte": datetime.datetime.now()}),
                 negative_boost=0.1
             )
@@ -256,9 +275,9 @@ class MixedSearch(APIView):
                     tie_breaker=0.3,
                     fuzziness=1,
                     fields=[
-                     "text^3",
-                     "description^2",
-                     "url",
+                        "text^3",
+                        "description^2",
+                        "url",
                     ]),
                 field_value_factor={
                     "field": "weight",
@@ -269,13 +288,13 @@ class MixedSearch(APIView):
 
         try:
             documentation = DocumentationDocument.search().query(MultiMatch(query=query,
-                                                                 tie_breaker=0.3,
-                                                                 fuzziness=1,
-                                                                 fields=[
-                                                                     "title^4",
-                                                                     "content^2",
-                                                                     "path"
-                                                                 ])).execute().hits
+                                                                            tie_breaker=0.3,
+                                                                            fuzziness=1,
+                                                                            fields=[
+                                                                                "title^4",
+                                                                                "content^2",
+                                                                                "path"
+                                                                            ])).execute().hits
         except NotFoundError:
             documentation = []
 

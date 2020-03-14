@@ -5,7 +5,7 @@ import os.path as pth
 
 from api.htmlViews import api_docs
 from api.views import UserViewSet, PostViewSet, CommissionViewSet, SocialQuesterViewSet, PostImagesViewSet, \
-	UploadViewSet, MixedSearch, EventViewSet
+	UploadViewSet, MixedSearch, EventViewSet, DocumentViewSet
 
 # API URLs
 router = routers.DefaultRouter()
@@ -16,6 +16,7 @@ router.register(r'social-questers', SocialQuesterViewSet)
 router.register(r'post-images', PostImagesViewSet)
 router.register(r'uploads', UploadViewSet)
 router.register(r'events', EventViewSet)
+router.register(r'documents', DocumentViewSet)
 
 with open(pth.dirname(__file__)+"/docIntroduction.md", "r") as f:
 	API_DESCRIPTION = f.read()

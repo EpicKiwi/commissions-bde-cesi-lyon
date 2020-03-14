@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 
 from commissions.models import Post, Commission, CommissionSocialQuester, PostImage, Event
-from documents.models import Upload
+from documents.models import Upload, Document
 from index.models import QuickLink
 from users.models import User
 
@@ -182,6 +182,17 @@ class QuicklinkSerializer(serializers.HyperlinkedModelSerializer):
 			"page"
 		]
 
+class DocumentSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = Document
+		fields = [
+			"url",
+			"id",
+			"role",
+			"created_at",
+			"current_version",
+			"file"
+		]
 
 class DocumentationSerializer(serializers.Serializer):
 	title = serializers.CharField()
