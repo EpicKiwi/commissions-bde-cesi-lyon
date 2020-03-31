@@ -232,6 +232,7 @@ class SearchBoxComponent extends LitElement {
             vertical-align: center;
             overflow: auto;
             padding: 25px 0;
+            scrollbar-width: none;
         }
         
         .row-results > :first-child {
