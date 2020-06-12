@@ -1,1 +1,2 @@
-console.log("Bienvenue dans Webpack")
+import "@index/components/parallax-carousel"
+import "@index/components/quick-link"

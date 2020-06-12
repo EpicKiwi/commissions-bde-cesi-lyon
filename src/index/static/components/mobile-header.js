@@ -64,6 +64,25 @@
                 font-size: 35px;
             }
             
+            .logo-banner {
+                width: 100%;
+                height: 100%;
+                padding: 0 5px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            
+            .logo-banner .logo {
+                height: 100%;
+                margin-right: 10px;
+            }
+            
+            .mobile-title {
+                font-size: 20px;
+                font-family: var(--title-fonts);
+            }
+            
             @media screen and (max-width: 800px) {
                 .menu-activator {
                     display: block;
@@ -74,13 +93,19 @@
                     display: block;
                 }
             }
+            
         </style>
     <header>
         <bde-class-switcher id="hamburger" target-class="activated" class="menu-activator toolbar-button">
             <bde-icon icon="mdi-menu"></bde-icon>
         </bde-class-switcher>
         <div class="page-toolbar">
-            <slot></slot>
+            <slot>
+                <div class="logo-banner">
+                    <img src="/static/img/logo.png" alt="Logo" class="logo"/>
+                    <h1 class="mobile-title" >BDE CESI Lyon</h1>
+                </div>
+            </slot>
         </div>
     </header>
     `

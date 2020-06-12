@@ -55,6 +55,11 @@ INSTALLED_APPS = [
     'qr_code'
 ]
 
+if os.getenv("ELASTIC_HOST", None) is not None:
+    INSTALLED_APPS += ['django_elasticsearch_dsl']
+else:
+    print("Starting without Elasticsearch support")
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -206,7 +211,7 @@ ADMINS = (("EpicKiwi", "me@epickiwi.fr"),)
 
 # ------ EMAIL ------#
 
-EMAIL_HOST = "smtp.office365.com"
+EMAIL_HOST = os.getenv("EMAIL_HOST")
 EMAIL_PORT = 587
 EMAIL_SUBJECT_PREFIX = "[BDE Cesi Lyon]"
 EMAIL_USE_TLS = True
@@ -220,13 +225,24 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 100,
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PARSER_CLASSES': [
-        'rest_framework.parsers.JSONParser',
+        'api.parsers.JSONFileParser',
         'rest_framework.parsers.MultiPartParser',
         'rest_framework.parsers.FormParser',
     ]
+}
+
+# ------ ElasticSearch ------ #
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': os.getenv("ELASTIC_HOST")
+    },
 }

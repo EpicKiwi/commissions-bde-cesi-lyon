@@ -15,6 +15,8 @@ from markdown.treeprocessors import Treeprocessor
 from raven.transport import requests
 from requests.auth import HTTPBasicAuth
 
+from documentation.documents import DocumentationDocument
+
 REPOSITORY_URL = "https://api.github.com/repos/EpicKiwi/bdecesilyon-documentation/contents/guide{}"
 GITHUB_USER = os.getenv("GITHUB_USER")
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
@@ -38,6 +40,8 @@ def show_page(request, path="/"):
         return redirect(request.path[:-3])
 
     content = ""
+
+    updateElasticDocument = False
 
     if path not in contentcache or time.time() - contentcache[request_path][0] > CACHE_LIFETIME:
 
@@ -75,6 +79,8 @@ def show_page(request, path="/"):
         logger.info("Updated cache for documentation page {}".format(path))
         contentcache[request_path] = (time.time(), binaryContent, result["path"], is_directory, html_url)
 
+        updateElasticDocument = True
+
     else:
         is_directory = contentcache[request_path][3]
         binaryContent = contentcache[request_path][1]
@@ -96,6 +102,13 @@ def show_page(request, path="/"):
         'extra',
         DocumentationExtention(current_path=request.path, is_directory=is_directory)
     ])
+
+    if updateElasticDocument:
+        elasticDocument = DocumentationDocument(meta={"id": request_path})
+        elasticDocument.title = title
+        elasticDocument.content = textContent
+        elasticDocument.path = request_path
+        elasticDocument.save()
 
     return render(request, "show_documentation_page.html", {
         "content": textContent,

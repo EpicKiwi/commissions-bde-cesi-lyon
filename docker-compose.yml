@@ -16,8 +16,10 @@ services:
     environment:
       - POSTGRES_HOST=db
       - VERSION=${VERSION}
+      - ELASTIC_HOST=elasticsearch:9200
     depends_on:
       - db
+      - elasticsearch
     volumes:
       - user-media:/code/src/user-media
       - static-files:/code/src/static-files
@@ -107,12 +109,26 @@ services:
     environment:
       - POSTS_API_HOST=http://proxy
 
+  elasticsearch:
+    image: "elasticsearch:7.6.0"
+    networks:
+      - overlay
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.monitoring.enabled=false
+      - xpack.graph.enabled=false
+      - xpack.watcher.enabled=false
+    volumes:
+      - elasticsearch-persistant:/usr/share/elasticsearch/data
+
 volumes:
   user-media:
   db-content:
   analytics-db-content:
   analytics-content:
   static-files:
+  elasticsearch-persistant:
 
 networks:
   overlay:

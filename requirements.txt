@@ -11,3 +11,6 @@ django-url-filter
 django-webpack-loader
 django-qr-code
 rules
+pyyaml
+uritemplate
+django_elasticsearch_dsl

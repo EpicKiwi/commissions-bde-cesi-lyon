@@ -47,6 +47,10 @@ export class ApiClient {
         let response = await this.apiCall("POST","/api/uploads/", formdata)
         return await response.json()
     }
+
+    async apiGET(url){
+        return await this.apiCall("GET", url)
+    }
 }
 
 export const apiClient = new ApiClient()

@@ -1,9 +1,11 @@
 from django.contrib.auth.models import Group
+from django.urls import reverse
 from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 
-from commissions.models import Post, Commission, CommissionSocialQuester, PostImage
-from documents.models import Upload
+from commissions.models import Post, Commission, CommissionSocialQuester, PostImage, Event
+from documents.models import Upload, Document
+from index.models import QuickLink
 from users.models import User
 
 
@@ -75,6 +77,22 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 		]
 
 
+class ExtendedUserSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = User
+		fields = [
+			"url",
+			"id",
+			"email",
+			"first_name",
+			"last_name",
+			"profile_picture",
+			"is_active",
+			"support_member",
+			"is_viacesi"
+		]
+
+
 class SocialQuesterSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = CommissionSocialQuester
@@ -106,3 +124,117 @@ class UploadCreateSerializer(serializers.HyperlinkedModelSerializer):
 		fields = [
 			"file"
 		]
+
+
+class EventSerializer(serializers.HyperlinkedModelSerializer):
+
+	commission = CommissionSerializer()
+
+	class Meta:
+		model = Event
+		fields = [
+			"url",
+			"id",
+			"name",
+			"slug",
+			"description",
+			"location",
+			"banner",
+			"commission",
+			"creation_date",
+			"update_date",
+			"event_date_start",
+			"event_date_end"
+		]
+
+
+class UnauthenticatedEventSerializer(serializers.HyperlinkedModelSerializer):
+
+	commission = CommissionSerializer()
+
+	class Meta:
+		model = Event
+		fields = [
+			"url",
+			"id",
+			"name",
+			"slug",
+			"description",
+			"banner",
+			"commission",
+			"creation_date",
+			"update_date",
+			"event_date_start",
+			"event_date_end"
+		]
+
+
+class QuicklinkSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = QuickLink
+		fields = [
+			"url",
+			"id",
+			"text",
+			"weight",
+			"style",
+			"icon",
+			"page"
+		]
+
+class DocumentSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = Document
+		fields = [
+			"url",
+			"id",
+			"role",
+			"created_at",
+			"current_version",
+			"file"
+		]
+
+class DocumentationSerializer(serializers.Serializer):
+	title = serializers.CharField()
+	content = serializers.CharField()
+	path = serializers.CharField()
+	url = serializers.SerializerMethodField('get_url_fields')
+
+	def get_url_fields(self, obj):
+		return reverse("guide_subdocument", kwargs={"path": obj.path})
+
+
+class MixedSearchSerializer(serializers.Serializer):
+	documentations = serializers.ListField(
+		child=DocumentationSerializer()
+	)
+	commissions = serializers.ListField(
+		child=CommissionSerializer()
+	)
+	users = serializers.ListField(
+		child=ExtendedUserSerializer()
+	)
+	events = serializers.ListField(
+		child=EventSerializer()
+	)
+	quicklinks = serializers.ListField(
+		child=QuicklinkSerializer()
+	)
+
+
+class UnauthenticatedMixedSearchSerializer(serializers.Serializer):
+	documentations = serializers.ListField(
+		child=DocumentationSerializer()
+	)
+	commissions = serializers.ListField(
+		child=CommissionSerializer()
+	)
+	users = serializers.ListField(
+		child=ExtendedUserSerializer()
+	)
+	events = serializers.ListField(
+		child=UnauthenticatedEventSerializer()
+	)
+	quicklinks = serializers.ListField(
+		child=QuicklinkSerializer()
+	)

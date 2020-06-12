@@ -16,4 +16,4 @@ echo "Starting stack"
 docker stack deploy --compose-file docker-compose.yml bde-cesi-lyon
 
 echo "Cleaning old containers"
-docker ps | grep "bde-cesi-lyon_" | grep -v "_db" | cut -d' ' -f1 | xargs docker rm -f
+docker ps | grep "bde-cesi-lyon_" | grep -v "_db" | grep -v "_elasticsearch" | cut -d' ' -f1 | xargs docker rm -f

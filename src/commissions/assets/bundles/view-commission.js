@@ -1,5 +1,6 @@
 import "../components/tag"
 import "../components/event-card"
+import "@index/components/tooltip"
 
 let COM = null
 

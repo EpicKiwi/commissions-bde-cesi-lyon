@@ -16,16 +16,16 @@ class Tag(models.Model):
     Les tags associable aux commissions pour les trier et les retrouver
     """
     # Le nom du tag
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, help_text="Displayname du tag")
 
     # Le nom du tag modifié pour tenir dans une URL
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True, help_text="Le nom du tag modifié pour être utilisé dans une URL (généré automatiquement)")
 
     # Couleur du tag
-    color = models.CharField(max_length=20)
+    color = models.CharField(max_length=20, help_text="Couleur HTML valide du tag dans le site")
 
     # Si le champ est en rapport avec le sport pour inciter à prendre une adhésion au BDS
-    sport_related = models.BooleanField(default=False, help_text="Le tag est en rapport avec du sport, les utilisateurs seront encouragés à adhèrer au BDS")
+    sport_related = models.BooleanField(default=False, help_text="Si tag est en rapport avec du sport, les utilisateurs seront encouragés à adhèrer au BDS")
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -41,43 +41,43 @@ class Commission(RulesModel):
     """
 
     # La commission est elle active et maintenue ?
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True, help_text="La commissions éfféctue elle des activités en ce moment et son conseil d'administration peut il être contacté ?")
 
     # Le nom de la commission
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, help_text="Displayname de la commission")
 
     # Le nom de la commission modifié pour qu'il soit valide dans une URL
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True, help_text="Le nom de la commission modifié pour quil puisse être utilisé dans l'URL (généré automatiquement)")
 
     # Une courte description de la commission en quelques mots
-    short_description = models.CharField(max_length=60)
+    short_description = models.CharField(max_length=60, help_text="Une (très) courte déscription de la commission qui viens se blottur sou son nom en tant que tagline")
 
     # Une longue description formattée en Markdown
-    description = models.TextField()
+    description = models.TextField(help_text="Une loooongue description de la commission pouvant être formaté en Markdown")
 
     # Le logo de la commission
-    logo = models.ImageField(upload_to="commission/logos")
+    logo = models.ImageField(upload_to="commission/logos", help_text="Le logo de la commission pour lui donner une belle image")
 
     # La banière de la commission
-    banner = models.ImageField(upload_to="commission/banners", blank=True, null=True)
+    banner = models.ImageField(upload_to="commission/banners", blank=True, null=True, help_text="Une grande bannière permettant de donner un look d'enfer à la commission")
 
     # L'utilisateur qui possède le rôle de président de la commission
-    president = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='president_commissions')
+    president = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='president_commissions', help_text="L'utilisateur définis comme président de cette commissions")
 
     # L'utilisateur qui possède le rôle de trésorier de la commission
-    treasurer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='treasurer_commissions')
+    treasurer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='treasurer_commissions', help_text="L'utilisateur déffinis comme trésorier de la commission, il peut être le même que l'utilisateur ayant le rôle de président")
 
     # L'utilisateur qui possède le rôle de suppléant de la commission
-    deputy = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='deputy_commissions')
+    deputy = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='deputy_commissions', help_text="L'utilisateur ayant le rôle de suppléant sur cette commission")
 
     # La date de creation de la commission
-    creation_date = models.DateTimeField(auto_now_add=True)
+    creation_date = models.DateTimeField(auto_now_add=True, help_text="Date de création de la commission")
 
     # La date de dissolution de la commission
-    end_date = models.DateTimeField(default=None, blank=True, null=True)
+    end_date = models.DateTimeField(default=None, blank=True, null=True, help_text="Date de dissolution de la commission, quand elle passe en `is_active = False`")
 
     # Les tags de la commission
-    tags = models.ManyToManyField(Tag, blank=True, related_name='tags_commissions')
+    tags = models.ManyToManyField(Tag, blank=True, related_name='tags_commissions', help_text="L'ensemble des tags de la commission")
 
     # L'organisation en charge de la gestion de la commission (BDE ou BDS)
     organization_dependant = models.CharField(max_length=100, choices=[("bde", "BDE"), ("bds", "BDS")], default="bde", help_text="L'organisation à laquelle appartiens la commission")
@@ -121,6 +121,9 @@ class Commission(RulesModel):
     def has_add_event_permission(self, request):
         return self.has_change_permission(request)
 
+    def get_tags_names(self):
+        return list(map(lambda x: x.name, self.tags.all()))
+
     class Meta:
 
         rules_permissions = {
@@ -143,12 +146,12 @@ class MembreCommission(models.Model):
     Les membre de commission commissions
     """
     # L'ID du membre
-    identification = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='membres')
-    commission = models.ForeignKey(Commission, on_delete=models.SET_NULL, null=True, related_name='membres')
-    join_date = models.DateTimeField(auto_now_add=True)
+    identification = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='membres', help_text="L'utilisateur ayant demandé cette adhesion")
+    commission = models.ForeignKey(Commission, on_delete=models.SET_NULL, null=True, related_name='membres', help_text="La commission dans laquelle l'utilisateur a adhèré")
+    join_date = models.DateTimeField(auto_now_add=True, help_text="La date de l'adhésion")
 
-    # Les permissions du membre (TODO)
-    role = models.CharField(max_length=50, default=None, null=True, blank=True)
+    # TODO Les permissions du membre
+    role = models.CharField(max_length=50, default=None, null=True, blank=True, help_text="Le nom du rôle que l'utilisateur tiens avec cette adhésion. Si le rôle est définis, le membre est noté comme faisant partie du conseil d'administration mais n'as pas de permissions supplémentaires")
 
     def __str__(self):
         return self.identification.email + (" ( " + self.role + " )") if self.role is not None else ""
@@ -159,34 +162,34 @@ class Event(models.Model):
     Les évènements créés par les commissions
     """
     # Le nom de l'évènement
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, help_text="Dsiplayname de l'événement")
 
     # Le nom du tag modifié pour tenir dans une url
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True, help_text="Le nom de l'événement formaté pour être valide dans uen URL (Champ généré automatiquement)")
 
     # La description de l'évènement
-    description = models.TextField()
+    description = models.TextField(help_text="Une looogue description de l'événement pouvant être formaté en Markdown")
 
     # Emplacement de l'événement
-    location = models.CharField(max_length=255, blank=True, null=True)
+    location = models.CharField(max_length=255, blank=True, null=True, help_text="L'emplacement de l'événement")
 
     # Photo de l'évènement
-    banner = models.ImageField(upload_to="events/photos", blank=True, null=True)
+    banner = models.ImageField(upload_to="events/photos", blank=True, null=True, help_text="La bannière de lévénement pour lui donner un look d'enfer. Si elle n'est pas défnini, la bannière de la commission sera utilisée")
 
     # Commission liée à l'évènement
-    commission = models.ForeignKey(Commission, on_delete=models.SET_NULL, null=True, related_name='events')
+    commission = models.ForeignKey(Commission, on_delete=models.SET_NULL, null=True, related_name='events', help_text="La commission organisatrice de l'événement")
 
     # La date de creation de l'évènement
-    creation_date = models.DateTimeField(auto_now_add=True)
+    creation_date = models.DateTimeField(auto_now_add=True, help_text="La date de création de l'événement sur le site")
 
     # La date de dernière mise à jour de l'évènement
-    update_date = models.DateTimeField(auto_now=True)
+    update_date = models.DateTimeField(auto_now=True, help_text="La date de dernière modification de l'événement")
 
     # La date de début l'évènement
-    event_date_start = models.DateTimeField()
+    event_date_start = models.DateTimeField(help_text="La date à laquelle l'événement commence")
 
     # La date de fin de l'évènement
-    event_date_end = models.DateTimeField()
+    event_date_end = models.DateTimeField(help_text="La date à laquelle l'événement se termine")
 
     def get_start_utc(self):
         return self.event_date_start - timedelta(hours=1)
@@ -202,6 +205,9 @@ class Event(models.Model):
 
     def has_change_event_permission(self, request):
         return self.commission.has_change_permission(request)
+
+    def get_commission_name(self):
+        return self.commission.name
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
