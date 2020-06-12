@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "concurrently --kill-others \"cd src && VERSION=$(./get_version.sh) python3 manage.py runserver\" \"webpack-cli --watch\"",
     "build": "webpack-cli",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "storybook": "start-storybook"
   },
   "repository": {
     "type": "git",
@@ -18,25 +19,28 @@
   },
   "homepage": "https://bdecesilyon.fr",
   "devDependencies": {
-    "@babel/core": "^7.7.5",
-    "@babel/plugin-proposal-class-properties": "^7.7.4",
-    "@babel/plugin-proposal-decorators": "^7.7.4",
-    "@babel/plugin-syntax-dynamic-import": "^7.7.4",
-    "@babel/preset-env": "^7.7.6",
-    "babel-loader": "^8.0.6",
+    "@babel/core": "^7.10.2",
+    "@babel/plugin-proposal-class-properties": "^7.10.1",
+    "@babel/plugin-proposal-decorators": "^7.10.1",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/preset-env": "^7.10.2",
+    "@storybook/addon-storysource": "^5.3.19",
+    "@storybook/html": "^5.3.19",
+    "babel-loader": "^8.1.0",
     "clean-webpack-plugin": "^3.0.0",
     "concurrently": "^5.2.0",
     "dotenv": "^8.2.0",
     "glob": "^7.1.6",
-    "webpack": "^4.41.2",
+    "webpack": "^4.43.0",
     "webpack-bundle-tracker": "^0.4.3",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.11"
   },
   "dependencies": {
-    "axios": "^0.19.1",
-    "core-js": "^2.5.7",
+    "@iconify/iconify": "^1.0.6",
+    "axios": "^0.19.2",
+    "core-js": "^2.6.11",
     "delay": "^4.3.0",
-    "lit-element": "^2.2.1",
+    "lit-element": "^2.3.1",
     "lodash.debounce": "^4.0.8",
     "simplemde": "^1.11.2"
   }

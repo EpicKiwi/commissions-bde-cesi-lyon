@@ -3,10 +3,15 @@ import {LitElement, html} from "lit-element";
 class LoadingComponent extends LitElement {
 
     static get properties(){return {
-
+        /**
+        * CSS size of the loading icon
+        */
+        size: {type: "string"}
     }}
 
     render() {
+
+        let style = this.size ? `font-size: ${this.size}` : ""
 
         return html`<style>
         	@keyframes loading-spin {
@@ -33,7 +38,7 @@ class LoadingComponent extends LitElement {
         </style>
         <div class="loading-wrapper">
         	<div class="loader">
-        		<bde-icon icon="mdi-reload"></bde-icon>
+        		<bde-icon style="${style}" icon="mdi-reload"></bde-icon>
         	</div>
         </div>`
     }
