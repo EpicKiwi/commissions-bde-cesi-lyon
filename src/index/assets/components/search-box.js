@@ -3,6 +3,7 @@ import debounce from "lodash.debounce";
 import apiClient from "../libs/apiClient"
 import "@index/components/quick-link"
 import "@commissions/components/event-card"
+import "@index/components/loading.js"
 
 class SearchBoxComponent extends LitElement {
 
@@ -10,7 +11,8 @@ class SearchBoxComponent extends LitElement {
         loading: {type: Boolean},
         search: {type: String},
         results: {type: Object},
-        show: {type: Boolean}
+        show: {type: Boolean},
+        loading: {type: Boolean}
     }}
 
     constructor() {
@@ -51,6 +53,7 @@ class SearchBoxComponent extends LitElement {
         super.update(changedProperties)
         if(changedProperties.has("search")){
             if(this.search.trim() !== ""){
+                this.loading = true;
                 this.debouncedPerformSearch(this.search)
             } else {
                 this.results = ""
@@ -77,7 +80,7 @@ class SearchBoxComponent extends LitElement {
             return
 
         this.results = await (await apiClient.apiGET(`/api/search?q=${encodeURI(this.search)}`)).json()
-        console.log(this.results)
+        this.loading = false;
     }
 
     clearField(){
@@ -218,12 +221,17 @@ class SearchBoxComponent extends LitElement {
             min-width: 0;
         }
         
-        .search-form .search-button {
+        .search-form .search-button, .search-form .loading-indicator {
+            display: block;
             font-size: 25px;
             border: none;
             outline: none;
             background: transparent;
             padding: 10px 15px;
+        }
+
+        .search-form .search-button.hidden, .search-form .loading-indicator.hidden {
+            display: none;
         }
         
         .row-results {
@@ -305,7 +313,8 @@ class SearchBoxComponent extends LitElement {
         </style>
         <div class="wrapper ${!this.show ? "hidden" : ""}">
             <div class="search-form">
-                <button class="search-button" @click="${() => this.performSearch(this.search)}" ><bde-icon icon="mdi-magnify"></bde-icon></button>
+                <button class="search-button ${this.loading ? "hidden": ""}" @click="${() => this.performSearch(this.search)}" ><bde-icon icon="mdi-magnify"></bde-icon></button>
+                <bde-loading class="loading-indicator ${!this.loading ? "hidden": ""}"></bde-loading>
                 <input
                     type="text"
                     class="search-input"
