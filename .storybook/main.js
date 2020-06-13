@@ -3,7 +3,11 @@ const glob = require("glob");
 
 module.exports = {
 	stories: ['./stories/**/*.stories.js'],
-	addons: ['@storybook/addon-storysource'],
+	addons: [
+		'@storybook/addon-storysource',
+		'@storybook/addon-backgrounds/register',
+		'@storybook/addon-actions/register',
+		'@storybook/addon-knobs/register'],
 	webpackFinal: (config) => {
 		const apps = glob.sync("src/*")
 			.reduce((obj, pth) => {
