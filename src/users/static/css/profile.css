@@ -90,8 +90,24 @@
 	display: none;
 }
 
+.profile-header .name-heading {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+
 .profile-header .profile-details .full-name {
 	font-size: 50px;
+}
+
+.profile-header .name-heading .support-member {
+	margin-left: 20px;
+	color: var(--primary-color);
+	font-size: 30px;
+}
+
+.profile-header .name-heading .support-member.bds {
+	color: var(--bds-color);
 }
 
 .profile-header .profile-details .profile-stats {
