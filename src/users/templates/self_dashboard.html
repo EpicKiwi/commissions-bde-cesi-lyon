@@ -1,0 +1,60 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% load render_bundle from webpack_loader %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "css/profile.css" %}"/>
+    <script src="{% static "components/timeline.js" %}"></script>
+    {% render_bundle 'profile' %}
+{% endblock %}
+
+{% block title %}Tableau de bord de {{view_user.first_name}}{% endblock %}
+
+{% block body %}
+
+    {% if view_user.profile_picture %}
+        <div class="profile-banner">
+                <img src="/media/{{ view_user.profile_picture }}"/>
+        </div>
+    {% endif %}
+
+    <div class="profile-body">
+
+        <div class="profile-header">
+
+            <div class="profile-picture {% if not view_user.profile_picture %}placeholder{% endif %}">
+                <img src="/media/{{ view_user.profile_picture }}" alt="Image de profil de {% include "fragments/safe_full_name.html" with user=view_user %}"/>
+            </div>
+
+            <div class="profile-details">
+                <h2 class="full-name">Salut {{view_user.first_name}} !</h2>
+                <p class="motivation">Passe une bonne journée 🙂</p>
+            </div>
+
+        </div>
+
+        <aside class="profile-aside">
+            <div class="aside-block toolbar">
+                <!--<bde-button class="medium block" icon="mdi-pencil">Éditer mon profil</bde-button>-->
+                <bde-button class="medium block" href="{% url "profile" slug=view_user.slug %}">Voir mon profil</bde-button>
+                <bde-button class="danger medium block" href="{% url "logout" %}">Me déconnecter</bde-button>
+            </div>
+        </aside>
+
+        <div class="profile-posts">
+            {% if posts %}
+            <bde-timeline class="timeline nowrap">
+                {% for post in posts %}
+                    {% include "fragments/post.html" %}
+                {% endfor %}
+            </bde-timeline>
+            {% else %}
+            <div class="no-posts">
+                {{ view_user.first_name }} n'a pas encore publié·e
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+{% endblock %}

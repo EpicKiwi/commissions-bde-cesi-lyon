@@ -97,10 +97,19 @@ def view_profile(request, slug=None):
         'posts': posts.all()
     })
 
+def view_self(request, slug=None):
+    user = request.user
 
-def edit_profile(request, slug=None):
-    user = request.user if slug is None else get_object_or_404(User, slug=slug)
+    selfPosts = Post.objects.filter(author=user)
+    memberCommissionsPost = Post.objects.filter(commission__membres__identification=user)
+    commissionsPost = Post.objects.filter(
+        Q(commission__president=user) | 
+        Q(commission__treasurer=user) | 
+        Q(commission__deputy=user))
 
-    return render(request, "edit_profile.html", {
-        'view_user': user
+    posts = selfPosts.union(memberCommissionsPost).union(commissionsPost).order_by("-date")
+
+    return render(request, "self_dashboard.html", {
+        'view_user': user,
+        'posts': posts.all()
     })

@@ -8,10 +8,8 @@
             image-src="/media/{{ user.profile_picture }}"
         {% endif %}
 
-        {% if perms.users.view_full_profile %}
-            href="{% url "profile" slug=user.slug %}"
-            title="Contacter {% include "fragments/safe_full_name.html" %}"
-        {% endif %}
+        href="{% url "profile" slug=user.slug %}"
+        title="Profil de {% include "fragments/safe_full_name.html" %}"
 >
     {% include "fragments/safe_full_name.html" %}
 </bde-user>
