@@ -74,11 +74,11 @@ def view_profile(request, slug=None):
     user = request.user if slug is None else get_object_or_404(User, slug=slug)
 
 
-    allMemberCommissions = Commission.objects.filter(
+    allMemberCommissions = Commission.safe_objects.filter(
         is_active=True,
         membres__identification=user).exclude(is_organization=True)
 
-    ownedCommissions = Commission.objects.filter(
+    ownedCommissions = Commission.safe_objects.filter(
         Q(president=user) | 
         Q(treasurer=user) | 
         Q(deputy=user)).filter(
@@ -86,7 +86,7 @@ def view_profile(request, slug=None):
 
     memberCommissions = allMemberCommissions.filter(membres__role=None)
 
-    posts = Post.objects.filter(author=user).order_by("-date")
+    posts = Post.safe_objects.filter(author=user).order_by("-date")
 
     return render(request, "view_profile.html", {
         'view_user': user,
@@ -100,9 +100,9 @@ def view_profile(request, slug=None):
 def view_self(request, slug=None):
     user = request.user
 
-    selfPosts = Post.objects.filter(author=user)
-    memberCommissionsPost = Post.objects.filter(commission__membres__identification=user)
-    commissionsPost = Post.objects.filter(
+    selfPosts = Post.safe_objects.filter(author=user)
+    memberCommissionsPost = Post.safe_objects.filter(commission__membres__identification=user)
+    commissionsPost = Post.safe_objects.filter(
         Q(commission__president=user) | 
         Q(commission__treasurer=user) | 
         Q(commission__deputy=user))

@@ -88,6 +88,7 @@ class Commission(RulesModel):
     # Si la "commission" est un organisation, c'est a dire qu'elle n'apparait pas sur le liste des commission mais peut profiter de toutes les fonctionnalités des commissions comme les events, les hashtags, etc..
     is_organization = models.BooleanField(default=False, help_text="Définie que cet instance est une organisation et non une commission, une organisation n'apparait pas dans la liste des commissions mais dispose de toutes les fonctionnalités associés")
 
+    objects = models.Manager()
     safe_objects = CommissionModelManager()
 
     def save(self, *args, **kwargs):
@@ -249,6 +250,7 @@ class Post(models.Model):
 
     is_moderated = models.BooleanField(help_text="Si le poste est modéré et masqué aux utilisateurs", default=False)
 
+    objects = models.Manager()
     safe_objects = PostModelManager()
 
     def has_even_medias(self):
