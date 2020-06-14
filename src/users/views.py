@@ -102,14 +102,15 @@ def view_self(request, slug=None):
 
     selfPosts = Post.safe_objects.filter(author=user)
     memberCommissionsPost = Post.safe_objects.filter(commission__membres__identification=user)
+    organizationPost = Post.safe_objects.filter(commission__is_organization=True)
     commissionsPost = Post.safe_objects.filter(
         Q(commission__president=user) | 
         Q(commission__treasurer=user) | 
         Q(commission__deputy=user))
 
-    posts = selfPosts.union(memberCommissionsPost).union(commissionsPost).order_by("-date")
+    posts = selfPosts.union(memberCommissionsPost).union(commissionsPost).union(organizationPost).order_by("-date")
 
     return render(request, "self_dashboard.html", {
         'view_user': user,
-        'posts': posts.all()
+        'posts': posts.all()[:20]
     })

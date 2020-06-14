@@ -61,7 +61,7 @@
             {% endif %}
             {% if member_commissions %}
             <div class="aside-block">
-                <h3>À rejoins</h3>
+                <h3>Membre de{{member_commissions|pluralize}} {{member_commissions|pluralize:"la,"}} commission{{member_commissions|pluralize}}</h3>
                 <div class="card-content">
                 {% for com in member_commissions %}
                     {% include "fragments/commission-card.html" %}
