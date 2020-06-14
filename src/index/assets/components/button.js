@@ -33,9 +33,10 @@ import {animate} from "@index/libs/animate"
 class ButtonComponent extends LitElement {
 
 	static get properties() { return {
-		icon: {type: "string"},
+		icon: {type: String},
 		disabled: {type: Boolean},
-		loading: {type: Boolean}
+		loading: {type: Boolean},
+		href: {type: String}
 	}}
 
 	get isClickable(){
@@ -65,6 +66,23 @@ class ButtonComponent extends LitElement {
 			iconSize = "30px"
 		}
 
+		let buttonTag = this.href ? "a" : "button"
+
+		let content = html`
+		<div class="loading-panel"><bde-loading size="${iconSize}"></bde-loading></div>
+			<div class="icon-area ${!this.icon ? "hidden" : ""}">
+				<bde-icon icon="${this.icon}"></bde-icon>
+			</div>
+			<div class="text-area">
+				<slot></slot>
+		</div>`
+
+		let buttonElements = this.href ? html`<a id="btn" href="${this.href}" class="main-button ${this.loading ? "loading" : ""} ${this.disabled ? "disabled" : ""}" ?disabled=${!this.isClickable}>
+			${content}
+		</a>` : html`<button id="btn" class="main-button ${this.loading ? "loading" : ""} ${this.disabled ? "disabled" : ""}" ?disabled=${!this.isClickable}>
+			${content}
+		</button>`
+
 		return html`<style>
 			* {
 				box-sizing: border-box;
@@ -93,6 +111,8 @@ class ButtonComponent extends LitElement {
 				cursor: pointer;
 
 				position: relative;
+				text-decoration: none;
+				font-family: var(--paragraph-fonts, sans-serif);
 			}
 
 			:host(.block) .main-button {
@@ -280,16 +300,7 @@ class ButtonComponent extends LitElement {
 				font-size: 30px;
 			}
 
-		</style><!--
-		--><button id="btn" class="main-button ${this.loading ? "loading" : ""} ${this.disabled ? "disabled" : ""}" ?disabled=${!this.isClickable}>
-			<div class="loading-panel"><bde-loading size="${iconSize}"></bde-loading></div>
-			<div class="icon-area ${!this.icon ? "hidden" : ""}">
-				<bde-icon icon="${this.icon}"></bde-icon>
-			</div>
-			<div class="text-area">
-				<slot></slot>
-			</div>
-		</button>`
+		</style>${buttonElements}`
 	}
 
 }

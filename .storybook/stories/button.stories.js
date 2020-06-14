@@ -168,3 +168,18 @@ export const merged = () => `
 	--><bde-button icon="mdi-instagram" class="merged-left medium"></bde-button>
 	</p>
 `
+
+export const links = () => `
+	<style>
+	* {
+    	--primary-color: #00a7e2;
+    	--on-primary-color: white;
+	}
+	</style>
+
+	<p>
+	<bde-button href="https://bdecesilyon.fr" >Aller sur le site du BDE</bde-button>
+	<bde-button href="https://bdecesilyon.fr" class="medium" >Aller sur le site du BDE</bde-button>
+	<bde-button href="https://bdecesilyon.fr" class="large" >Aller sur le site du BDE</bde-button>
+	</p>
+`
