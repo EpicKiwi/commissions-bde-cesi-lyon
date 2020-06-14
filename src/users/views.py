@@ -1,6 +1,7 @@
 import logging
 import os
 from random import randrange
+from django.db.models import Q
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -9,6 +10,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from bdecesi.keys import AUTH_VIACESI_TENANT_ID, AUTH_VIACESI_APP_ID
 from users.models import User
+from commissions.models import Commission, Post
 
 logger = logging.getLogger(__name__)
 
@@ -71,8 +73,28 @@ def logoutView(request):
 def view_profile(request, slug=None):
     user = request.user if slug is None else get_object_or_404(User, slug=slug)
 
+
+    allMemberCommissions = Commission.objects.filter(
+        is_active=True,
+        membres__identification=user).exclude(is_organization=True)
+
+    ownedCommissions = Commission.objects.filter(
+        Q(president=user) | 
+        Q(treasurer=user) | 
+        Q(deputy=user)).filter(
+        is_active=True).exclude(is_organization=True).union(allMemberCommissions.exclude(membres__role=None))
+
+    memberCommissions = allMemberCommissions.filter(membres__role=None)
+
+    posts = Post.objects.filter(author=user).order_by("-date")
+
     return render(request, "view_profile.html", {
-        'view_user': user
+        'view_user': user,
+        'owned_commissions': ownedCommissions.all(),
+        'member_commissions': memberCommissions.all(),
+        'commission_count': ownedCommissions.count(),
+        'member_count': memberCommissions.count() + ownedCommissions.count(),
+        'posts': posts.all()
     })
 
 

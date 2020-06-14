@@ -45,4 +45,6 @@ class LoadingComponent extends LitElement {
 
 }
 
-customElements.define("bde-loading", LoadingComponent)
+if(!customElements.get("bde-loading")){
+    customElements.define("bde-loading", LoadingComponent)
+}
