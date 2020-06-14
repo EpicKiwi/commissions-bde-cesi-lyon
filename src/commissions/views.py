@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 def list_commissions(request):
 
-    commissions = Commission.objects.filter(is_organization=False).order_by("-creation_date").order_by("-is_active")
+    commissions = Commission.objects.filter(is_organization=False, is_active=True).order_by("-creation_date").order_by("-is_active")
 
     return render(request, "list-commissions.html", {
         "commissions": commissions,
