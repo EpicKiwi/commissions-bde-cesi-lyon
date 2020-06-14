@@ -6,6 +6,7 @@ import hashlib
 from django.utils.text import slugify
 
 from shortener.random_readable import generate_random_string
+from random import randrange
 
 
 class UserManager(BaseUserManager):
@@ -91,7 +92,7 @@ class User(AbstractUser):
             return super().save(*args, **kwargs)
 
     def generate_slug(self):
-        return "{}-{}".format(self.first_name, generate_random_string())
+        return "{}-{}".format(self.first_name, randrange(1000,9999))
 
     class Meta(AbstractUser.Meta):
         permissions = [

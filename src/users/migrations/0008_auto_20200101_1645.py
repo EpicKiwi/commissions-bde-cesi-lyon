@@ -5,14 +5,14 @@ from django.db import migrations, models
 from django.utils.timezone import utc
 
 from users.models import User
-
+from random import randrange
 
 def create_slug(apps, schema_editor):
     db = schema_editor.connection.alias
 
     all_users = User.objects.using(db).all()
     for user in all_users:
-        user.slug = ""
+        user.slug = "{}-{}".format(user.first_name, randrange(1000,9999))
         user.save()
 
 
