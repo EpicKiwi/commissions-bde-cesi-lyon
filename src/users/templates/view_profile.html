@@ -1,0 +1,104 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% load render_bundle from webpack_loader %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "css/profile.css" %}"/>
+    <script src="{% static "components/timeline.js" %}"></script>
+    {% render_bundle 'profile' %}
+{% endblock %}
+
+{% block title %}{% include "fragments/safe_full_name.html" with user=view_user %}{% endblock %}
+
+{% block body %}
+
+    {% if view_user.profile_picture %}
+        <div class="profile-banner">
+                <img src="/media/{{ view_user.profile_picture }}"/>
+        </div>
+    {% endif %}
+
+    <div class="profile-body">
+
+        <div class="profile-header">
+
+            <div class="profile-picture {% if not view_user.profile_picture %}placeholder{% endif %}">
+                <img src="/media/{{ view_user.profile_picture }}" alt="Image de profil de {% include "fragments/safe_full_name.html" with user=view_user %}"/>
+            </div>
+
+            <div class="profile-details">
+                <div class="name-heading">
+                    <h2 class="full-name">{% include "fragments/safe_full_name.html" with user=view_user %}</h2>
+                    {% if view_user.support_member %}
+                    <div class="support-member {{view_user.support_member}}" title="Membre du support {{view_user.support_member | upper}}">
+                        <bde-icon icon="fa-star"></bde-icon>
+                    </div>
+                    {% endif %}
+                </div>
+                <ul class="profile-stats">
+                    {% if commission_count > 0 %}
+                        <li class="commission-creator">{{commission_count}} commission{{commission_count|pluralize}} active{{commission_count|pluralize}}</li>
+                    {% endif %}
+                    {% if member_count > 0 and commission_count != member_count %}
+                        <li class="commission-creator">Membre de {{member_count}} commission{{member_count|pluralize}}</li>
+                    {% endif %}
+                </ul>
+                {% if perms.users.view_full_profile %}
+                <div class="profile-contact">
+                    <bde-button icon="mdi-mail" class="medium" href="mailto:{{view_user.email}}" >Contacter</bde-button>
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <aside class="profile-aside">
+            {% if member_organization %}
+            <div class="aside-block">
+                <div class="card-content orgs">
+                {% for com in member_organization %}
+                    {% include "fragments/compact-commission.html" %}
+                {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            {% if owned_commissions %}
+            <div class="aside-block">
+                <h3>Ses commissions</h3>
+                <div class="card-content">
+                {% for com in owned_commissions %}
+                    {% include "fragments/commission-card.html" %}
+                {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            {% if member_commissions %}
+            <div class="aside-block">
+                <h3>Membre de{{member_commissions|pluralize}} {{member_commissions|pluralize:"la,"}} commission{{member_commissions|pluralize}}</h3>
+                <div class="card-content">
+                {% for com in member_commissions %}
+                    {% include "fragments/commission-card.html" %}
+                {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+        </aside>
+
+        <div class="profile-posts">
+            {% if posts %}
+            <bde-timeline class="timeline nowrap">
+                {% for post in posts %}
+                    {% include "fragments/post.html" %}
+                {% endfor %}
+            </bde-timeline>
+            {% else %}
+            <div class="no-posts">
+                {{ view_user.first_name }} n'a pas encore publié·e
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+{% endblock %}

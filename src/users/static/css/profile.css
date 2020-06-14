@@ -1,0 +1,249 @@
+.profile-body {
+	position: relative;
+	max-width: 1300px;
+	margin-top: 50px;
+	min-height: 80vh;
+	padding: 50px;
+	margin-left: auto;
+	margin-right: auto;
+	background: var(--bg-color);
+
+	border-radius: 5px 5px 0 0;
+
+	display: grid;
+	grid-auto-columns: auto 300px;
+	grid-column-gap: 50px;
+	grid-row-gap: 50px;
+	grid-auto-rows: minmax(0px, min-content) auto;
+}
+
+.main-body {
+	position: relative;
+}
+
+.profile-banner {
+	position: absolute;
+	top: -50px;
+	left: 0;
+	width: 100%;
+	height: 75vh;
+	overflow: hidden;
+}
+
+.profile-banner img {
+	position: relative;
+	width: calc(100% + 50px);
+	height: calc(100% + 50px);
+	object-fit: cover;
+	filter: blur(15px);
+	margin-left: -25px;
+	margin-top: -25px;
+}
+
+.profile-banner::after {
+	width: 100%;
+	height: 50px;
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	background: rgba(255,255,255,0.9);
+}
+
+.profile-header {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	grid-column: 1;
+  	grid-row: 1;
+}
+
+.profile-header .profile-details {
+	flex: 1;
+	padding: 20px 50px;
+}
+
+.profile-header .motivation {
+	margin-top: 25px;
+	font-size: 25px;
+}
+
+.profile-header .profile-picture {
+	border-radius: 100%;
+	overflow: hidden;
+	min-width: 200px;
+	min-height: 200px;
+	width: 200px;
+	height: 200px;
+}
+
+.profile-header .profile-picture img {
+	display: block;
+	height: 200px;
+}
+
+.profile-header .profile-picture.placeholder {
+	background: #F4F4F4;
+}
+
+.profile-header .profile-picture.placeholder img {
+	display: none;
+}
+
+.profile-header .name-heading {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.profile-header .profile-details .full-name {
+	font-size: 50px;
+}
+
+.profile-header .name-heading .support-member {
+	margin-left: 20px;
+	color: var(--primary-color);
+	font-size: 30px;
+}
+
+.profile-header .name-heading .support-member.bds {
+	color: var(--bds-color);
+}
+
+.profile-header .profile-details .profile-stats {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	flex-wrap: wrap;
+	margin-top: 20px;
+	font-size: 20px;
+}
+
+.profile-header .profile-details .profile-stats > * {
+	margin-right: 50px;
+	margin-bottom: 10px;
+}
+
+.profile-header .profile-contact {
+	margin-top: 20px;
+}
+
+@media screen and (max-width: 1000px) {
+	.profile-header {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.profile-header .profile-details *, .profile-header .profile-contact {
+		text-align: center;
+		justify-content: center;
+	}
+
+	.profile-header .profile-details .profile-stats {
+		flex-direction: column;
+		text-align: center;
+		justify-content: center;
+	}
+
+	.profile-header .profile-details .profile-stats > *{
+		margin-right: 0;
+	}
+
+	.profile-banner {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 1550px) {
+	.profile-body {
+		border-radius: 0;
+		grid-auto-columns: auto;
+	}
+
+	.profile-details {
+		padding: 0;
+	}
+}
+
+.profile-aside {
+	grid-column: 2;
+  	grid-row: 1 / 3;
+}
+
+.profile-aside h3{
+	font-family: var(--title-fonts);
+	font-size: 20px;
+	margin-bottom: 20px;
+	text-align: center;
+	color: #696969;
+}
+
+.profile-aside .aside-block {
+	margin-top: 50px;
+}
+
+.profile-aside .orgs > * {
+	width: 300px;
+	background: #F4F4F4;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+.profile-aside .aside-block .card-content {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.profile-aside .aside-block:first-child {
+	margin-top: 0;
+}
+
+.profile-aside .aside-block .card-content > * {
+	margin-bottom: 20px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.profile-aside .toolbar {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.profile-aside .toolbar > * {
+	margin-bottom: 10px;
+}
+
+@media screen and (max-width: 1500px) {
+	.profile-aside {
+		grid-column: 1;
+	  	grid-row: 2;
+	}
+}
+
+.profile-posts {
+	grid-column: 1;
+  	grid-row: 2;
+
+  	display: flex;
+  	justify-content: flex-start;
+  	align-items: center;
+  	flex-direction: column;
+}
+
+.profile-posts .no-posts {
+	text-align: center;
+	font-size: 30px;
+	opacity: 0.25;
+	margin-top: 100px;
+	margin-bottom: 100px;
+}
+
+@media screen and (max-width: 1500px) {
+	.profile-posts {
+		grid-column: 1;
+	  	grid-row: 3;
+	}
+}

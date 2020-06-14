@@ -1,13 +1,16 @@
 import logging
 import os
 from random import randrange
+from django.db.models import Q
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from bdecesi.keys import AUTH_VIACESI_TENANT_ID, AUTH_VIACESI_APP_ID
+from users.models import User
+from commissions.models import Commission, Post
 
 logger = logging.getLogger(__name__)
 
@@ -65,3 +68,58 @@ def logoutView(request):
     messages.add_message(request, messages.SUCCESS, "À bientôt {}".format(request.user.first_name))
     logout(request)
     return redirect("/")
+
+
+def view_profile(request, slug=None):
+    user = request.user if slug is None else get_object_or_404(User, slug=slug)
+
+
+    allMemberCommissions = Commission.safe_objects.filter(
+        is_active=True,
+        membres__identification=user).exclude(is_organization=True)
+
+    memberOrganization = Commission.objects.filter(
+        Q(is_active=True) & (
+            Q(membres__identification=user) |
+            Q(president=user) | 
+            Q(treasurer=user) | 
+            Q(deputy=user)) &
+        Q(is_organization=True))
+
+    ownedCommissions = Commission.safe_objects.filter(
+        Q(president=user) | 
+        Q(treasurer=user) | 
+        Q(deputy=user)).filter(
+        is_active=True).exclude(is_organization=True).union(allMemberCommissions.exclude(membres__role=None))
+
+    memberCommissions = allMemberCommissions.filter(membres__role=None)
+
+    posts = Post.safe_objects.filter(author=user).order_by("-date")
+
+    return render(request, "view_profile.html", {
+        'view_user': user,
+        'owned_commissions': ownedCommissions.all(),
+        'member_commissions': memberCommissions.all(),
+        'commission_count': ownedCommissions.count(),
+        'member_organization': memberOrganization.all(),
+        'member_count': memberCommissions.count() + ownedCommissions.count(),
+        'posts': posts.all()
+    })
+
+def view_self(request, slug=None):
+    user = request.user
+
+    selfPosts = Post.safe_objects.filter(author=user)
+    memberCommissionsPost = Post.safe_objects.filter(commission__membres__identification=user)
+    organizationPost = Post.safe_objects.filter(commission__is_organization=True)
+    commissionsPost = Post.safe_objects.filter(
+        Q(commission__president=user) | 
+        Q(commission__treasurer=user) | 
+        Q(commission__deputy=user))
+
+    posts = selfPosts.union(memberCommissionsPost).union(commissionsPost).union(organizationPost).order_by("-date")
+
+    return render(request, "self_dashboard.html", {
+        'view_user': user,
+        'posts': posts.all()[:20]
+    })

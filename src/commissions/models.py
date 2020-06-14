@@ -34,6 +34,9 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+class CommissionModelManager(models.Manager):
+    def get_queryset(self):
+        return super(CommissionModelManager, self).get_queryset().filter(is_active=True, is_organization=False)
 
 class Commission(RulesModel):
     """
@@ -84,6 +87,9 @@ class Commission(RulesModel):
 
     # Si la "commission" est un organisation, c'est a dire qu'elle n'apparait pas sur le liste des commission mais peut profiter de toutes les fonctionnalités des commissions comme les events, les hashtags, etc..
     is_organization = models.BooleanField(default=False, help_text="Définie que cet instance est une organisation et non une commission, une organisation n'apparait pas dans la liste des commissions mais dispose de toutes les fonctionnalités associés")
+
+    objects = models.Manager()
+    safe_objects = CommissionModelManager()
 
     def save(self, *args, **kwargs):
         if self.slug is None or self.slug == "":
@@ -217,6 +223,10 @@ class Event(models.Model):
         return self.name
 
 
+class PostModelManager(models.Manager):
+    def get_queryset(self):
+        return super(PostModelManager, self).get_queryset().filter(is_moderated=False)
+
 class Post(models.Model):
 
     date = models.DateTimeField(help_text="Date de publication du post")
@@ -239,6 +249,9 @@ class Post(models.Model):
     author_image = models.CharField(max_length=255, blank=True, null=True, help_text="URL d'image de profil de l'auteur dans le cas ou l'utilisateur est null")
 
     is_moderated = models.BooleanField(help_text="Si le poste est modéré et masqué aux utilisateurs", default=False)
+
+    objects = models.Manager()
+    safe_objects = PostModelManager()
 
     def has_even_medias(self):
         return self.images.all().count() % 2 == 0

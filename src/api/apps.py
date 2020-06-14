@@ -1,6 +1,6 @@
 import os
 from django.apps import AppConfig
-from django.db import connections, DEFAULT_DB_ALIAS
+from django.db import connections, DEFAULT_DB_ALIAS, OperationalError
 from django.db.migrations.executor import MigrationExecutor
 
 
@@ -60,22 +60,25 @@ class ApiConfig(AppConfig):
         from django.contrib.auth.models import Permission
 
         if os.getenv("POSTS_API_TOKEN"):
-            check_token(
-                key=os.getenv("POSTS_API_TOKEN"),
-                username="special.posts.api@localhost",
-                permissions=[
-                    Permission.objects.get(codename="view_commission"),
-                    Permission.objects.get(codename="view_user"),
-                    Permission.objects.get(codename="view_full_profile"),
-                    Permission.objects.get(codename="add_post"),
-                    Permission.objects.get(codename="change_post"),
-                    Permission.objects.get(codename="delete_post"),
-                    Permission.objects.get(codename="view_post"),
-                    Permission.objects.get(codename="add_postimage"),
-                    Permission.objects.get(codename="change_postimage"),
-                    Permission.objects.get(codename="delete_postimage"),
-                    Permission.objects.get(codename="view_postimage")
-                ]
-            )
+            try:
+                check_token(
+                    key=os.getenv("POSTS_API_TOKEN"),
+                    username="special.posts.api@localhost",
+                    permissions=[
+                        Permission.objects.get(codename="view_commission"),
+                        Permission.objects.get(codename="view_user"),
+                        Permission.objects.get(codename="view_full_profile"),
+                        Permission.objects.get(codename="add_post"),
+                        Permission.objects.get(codename="change_post"),
+                        Permission.objects.get(codename="delete_post"),
+                        Permission.objects.get(codename="view_post"),
+                        Permission.objects.get(codename="add_postimage"),
+                        Permission.objects.get(codename="change_postimage"),
+                        Permission.objects.get(codename="delete_postimage"),
+                        Permission.objects.get(codename="view_postimage")
+                    ]
+                )
+            except OperationalError:
+                print("Couldn't add tokens, maybe some migrations are missing")
 
         super(ApiConfig, self).ready()

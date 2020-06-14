@@ -54,7 +54,6 @@ export function animate(el, animationName, extraDelay) {
         };
 
         el.classList.add(fromClass);
-
         let performAnimation = () => {
             el.$animationframerequest = requestAnimationFrame(() => {
                 el.$animationframerequest = null;

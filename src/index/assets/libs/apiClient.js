@@ -6,7 +6,7 @@ export class ApiError extends Error {
 }
 
 export class ApiClient {
-    async apiCall(method, url, data){
+    async apiCall(method, url, data, asJson){
         let initObj = {
             method: method,
             headers: {}
@@ -36,6 +36,10 @@ export class ApiClient {
 
         if(!res.ok){
             throw new ApiError("Request failed", res)
+        }
+
+        if(asJson){
+            res = await res.json()
         }
 
         return res

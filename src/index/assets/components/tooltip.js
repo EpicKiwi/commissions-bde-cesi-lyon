@@ -15,7 +15,8 @@ class TooltipComponent extends LitElement {
         show: {type: Boolean},
         forceHide: {type: Boolean},
         animateKeep: {type: Boolean},
-        flavor: {type: String}
+        flavor: {type: String},
+        noHover: {type: Boolean}
     }}
 
     connectedCallback() {
@@ -36,7 +37,7 @@ class TooltipComponent extends LitElement {
         if(changedProperties.has("show") && changedProperties.get("show") !== this.show){
             if(this.show){
                 this.animateEnter()
-            } else {
+            } else if(changedProperties.get("show") !== undefined) {
                 this.animateKeep = true
                 this.animateLeave().then(() => this.animateKeep = false)
             }
@@ -74,6 +75,12 @@ class TooltipComponent extends LitElement {
         return Object.values(ANCHORS).indexOf(this.anchor) === -1 ? "center" : this.anchor
     }
 
+    autoOpen(){
+        if(!this.noHover){
+            this.show = true;
+        }
+    }
+
     render() {
         let anchorclass = this.correctedAnchor
 
@@ -90,6 +97,7 @@ class TooltipComponent extends LitElement {
                 z-index: 1500;
                 max-width: 300px;
                 opacity: 0.9;
+                font-family: var(--paragraph-fonts, sans-serif);
             }
             
             .content.left .tooltip {
@@ -120,6 +128,16 @@ class TooltipComponent extends LitElement {
                 color: var(--on-secondary-color);
             }
             
+            .danger .tooltip-content {
+                background: var(--danger-color, #f44138);
+                color: var(--on-danger-color, white);
+            }
+            
+            .success .tooltip-content {
+                background: var(--success-color, #26cc45);
+                color: var(--on-success-color, white);
+            }
+            
             .tooltip-content.hidden {
                 display: none;
             }
@@ -144,6 +162,14 @@ class TooltipComponent extends LitElement {
             
             .secondary .tooltip-content::after {
                 border-top : 5px solid var(--secondary-color);
+            }
+            
+            .danger .tooltip-content::after {
+                border-top : 5px solid var(--danger-color, #f44138);
+            }
+            
+            .success .tooltip-content::after {
+                border-top : 5px solid var(--success-color, #26cc45);
             }
             
             .content.left .tooltip-content::after {
@@ -198,7 +224,7 @@ class TooltipComponent extends LitElement {
             }
             
         </style>
-        <div class="content ${anchorclass} ${this.flavor ? this.flavor : ""}" @mouseenter="${() => this.show = true}" @mouseleave="${() => this.show = false}">
+        <div class="content ${anchorclass} ${this.flavor ? this.flavor : ""}" @mouseenter="${() => this.autoOpen()}" @mouseleave="${() => this.show = false}">
             <div class="tooltip" style="left: ${this.XPos}px; top: ${this.YPos}px">
                 <div class="tooltip-content ${(!this.show && !this.animateKeep) || this.forceHide ? "hidden" : ""}" id="tooltip" @click="${() => this.show = false}">
                     ${this.content}

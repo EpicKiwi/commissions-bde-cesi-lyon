@@ -1,0 +1,11 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Edition du profile de {% include "fragments/safe_full_name.html" with user=view_user %}{% endblock %}
+
+{% block body %}
+    <h1>Edition {% include "fragments/safe_full_name.html" with user=view_user %}</h1>
+
+    {% if user == view_user %}
+    <a class="btn btn-danger" href="{% url "logout" %}">Se deconnecter</a>
+    {% endif %}
+{% endblock %}
