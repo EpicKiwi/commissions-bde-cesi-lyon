@@ -37,7 +37,7 @@ class TooltipComponent extends LitElement {
         if(changedProperties.has("show") && changedProperties.get("show") !== this.show){
             if(this.show){
                 this.animateEnter()
-            } else {
+            } else if(changedProperties.get("show") !== undefined) {
                 this.animateKeep = true
                 this.animateLeave().then(() => this.animateKeep = false)
             }
