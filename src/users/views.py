@@ -78,6 +78,14 @@ def view_profile(request, slug=None):
         is_active=True,
         membres__identification=user).exclude(is_organization=True)
 
+    memberOrganization = Commission.objects.filter(
+        Q(is_active=True) & (
+            Q(membres__identification=user) |
+            Q(president=user) | 
+            Q(treasurer=user) | 
+            Q(deputy=user)) &
+        Q(is_organization=True))
+
     ownedCommissions = Commission.safe_objects.filter(
         Q(president=user) | 
         Q(treasurer=user) | 
@@ -93,6 +101,7 @@ def view_profile(request, slug=None):
         'owned_commissions': ownedCommissions.all(),
         'member_commissions': memberCommissions.all(),
         'commission_count': ownedCommissions.count(),
+        'member_organization': memberOrganization.all(),
         'member_count': memberCommissions.count() + ownedCommissions.count(),
         'posts': posts.all()
     })

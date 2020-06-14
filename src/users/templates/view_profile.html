@@ -53,6 +53,15 @@
         </div>
 
         <aside class="profile-aside">
+            {% if member_organization %}
+            <div class="aside-block">
+                <div class="card-content orgs">
+                {% for com in member_organization %}
+                    {% include "fragments/compact-commission.html" %}
+                {% endfor %}
+                </div>
+            </div>
+            {% endif %}
             {% if owned_commissions %}
             <div class="aside-block">
                 <h3>Ses commissions</h3>
