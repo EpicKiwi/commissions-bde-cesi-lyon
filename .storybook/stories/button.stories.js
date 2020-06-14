@@ -107,9 +107,10 @@ export const loading = () => `
 		onclick="this.loading = true; setTimeout(() => this.loading = false, 2000)"
 	>Smol button</bde-button>
 	<bde-button
+		icon="mdi-upload"
 		class="medium"
 		onclick="this.loading = true; setTimeout(() => this.loading = false, 2000)"
-	>Normal button</bde-button>
+	>Envoyer</bde-button>
 	<bde-button
 		class="large"
 		onclick="this.loading = true; setTimeout(() => this.loading = false, 2000)"
