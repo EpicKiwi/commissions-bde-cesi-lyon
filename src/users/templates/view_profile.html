@@ -5,6 +5,7 @@
 {% block opengraph %}
 <meta property="og:title" content="Profil de {{view_user.first_name}}" />
 <meta property="og:type" content="profile" />
+<meta property="og:description" content="Découvre ce que fait {{view_user.first_name}} dans la vie asso" />
 <meta property="og:profile:first_name" content="{{view_user.first_name}}" />
 {% if view_user.profile_picture %}
 <meta property="og:image" content="http://{{ request.get_host }}/media/{{ view_user.profile_picture }}" />
