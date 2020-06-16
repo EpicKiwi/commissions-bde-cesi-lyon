@@ -107,6 +107,10 @@ def view_profile(request, slug=None):
     })
 
 def view_self(request, slug=None):
+
+    if not request.user.is_authenticated:
+        return redirect("/login?next={}".format(request.path))
+
     user = request.user
 
     selfPosts = Post.safe_objects.filter(author=user)
