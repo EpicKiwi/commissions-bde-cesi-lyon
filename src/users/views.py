@@ -76,7 +76,7 @@ def view_profile(request, slug=None):
 
     allMemberCommissions = Commission.safe_objects.filter(
         is_active=True,
-        membres__identification=user).exclude(is_organization=True)
+        membres__identification=user).exclude(is_organization=True).distinct()
 
     memberOrganization = Commission.objects.filter(
         Q(is_active=True) & (
@@ -84,15 +84,15 @@ def view_profile(request, slug=None):
             Q(president=user) | 
             Q(treasurer=user) | 
             Q(deputy=user)) &
-        Q(is_organization=True))
+        Q(is_organization=True)).distinct()
 
     ownedCommissions = Commission.safe_objects.filter(
         Q(president=user) | 
         Q(treasurer=user) | 
         Q(deputy=user)).filter(
-        is_active=True).exclude(is_organization=True).union(allMemberCommissions.exclude(membres__role=None))
+        is_active=True).exclude(is_organization=True).union(allMemberCommissions.exclude(membres__role=None)).distinct()
 
-    memberCommissions = allMemberCommissions.filter(membres__role=None)
+    memberCommissions = allMemberCommissions.filter(membres__role=None).distinct()
 
     posts = Post.safe_objects.filter(author=user).order_by("-date")
 
