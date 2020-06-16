@@ -2,6 +2,15 @@
 {% load static %}
 {% load render_bundle from webpack_loader %}
 
+{% block opengraph %}
+<meta property="og:title" content="Profil de {{view_user.first_name}}" />
+<meta property="og:type" content="profile" />
+<meta property="og:profile:first_name" content="{{view_user.first_name}}" />
+{% if view_user.profile_picture %}
+<meta property="og:image" content="http://{{ request.get_host }}/media/{{ view_user.profile_picture }}" />
+{% endif %}
+{% endblock %}
+
 {% block head %}
     <link rel="stylesheet" href="{% static "css/profile.css" %}"/>
     <script src="{% static "components/timeline.js" %}"></script>
@@ -94,7 +103,7 @@
             </bde-timeline>
             {% else %}
             <div class="no-posts">
-                {{ view_user.first_name }} n'a pas encore publié·e
+                {{ view_user.first_name }} n'a pas encore publié
             </div>
             {% endif %}
         </div>
