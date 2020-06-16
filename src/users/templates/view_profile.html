@@ -52,7 +52,7 @@
 
         </div>
 
-        <aside class="profile-aside">
+        <aside class="profile-aside {% if not posts %}focus{% endif %}">
             {% if member_organization %}
             <div class="aside-block">
                 <div class="card-content orgs">
@@ -85,7 +85,7 @@
 
         </aside>
 
-        <div class="profile-posts">
+        <div class="profile-posts {% if not posts %}empty{% endif %}">
             {% if posts %}
             <bde-timeline class="timeline nowrap">
                 {% for post in posts %}

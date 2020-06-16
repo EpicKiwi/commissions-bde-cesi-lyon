@@ -216,6 +216,11 @@
 	margin-bottom: 10px;
 }
 
+.profile-aside.focus {
+	grid-column: 1;
+  	grid-row: 2;
+}
+
 @media screen and (max-width: 1500px) {
 	.profile-aside {
 		grid-column: 1;
@@ -231,6 +236,10 @@
   	justify-content: flex-start;
   	align-items: center;
   	flex-direction: column;
+}
+
+.profile-posts.empty {
+  	grid-row: 3;
 }
 
 .profile-posts .no-posts {
